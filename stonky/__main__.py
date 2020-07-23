@@ -9,7 +9,7 @@ def main():
     config = Config()
     stock_store = StockStore(api, config)
     cli = Cli(config, stock_store)
-    if config.polling:
+    if config.refresh:
         cli.draw_live()
     else:
         cli.draw()

@@ -3,17 +3,17 @@ from configparser import ConfigParser
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional
+from stonky.types import SortType
 
 
 @dataclass
 class Config:
     positions: Dict[str, int] = field(default_factory=dict)
     watchlist: List[str] = field(default_factory=list)
-    ticket: Optional[str] = None
-    polling: Optional[int] = None
     config_path: Path = Path.home() / ".stonky.cfg"
-    sort_key = "delta_percent"
-    conversion_currency = None
+    refresh: Optional[int] = None
+    sort: Optional[SortType] = SortType.CHANGE
+    currency: Optional[str] = None
 
     @property
     def all_tickets(self):
@@ -21,17 +21,23 @@ class Config:
 
     def __post_init__(self):
         self._get_args()
-        if self.config_path.exists():
-            self._get_config()
-        if self.conversion_currency:
-            self.conversion_currency = self.conversion_currency.upper()
+        self._get_config()
 
     def _get_args(self):
         parser = ArgumentParser()
         parser.add_argument("--config")
+        parser.add_argument("--currency", type=int)
+        parser.add_argument("--refresh", type=int)
+        parser.add_argument("--sort", choices=SortType.arg_choices())
         args = parser.parse_args()
         if args.config:
             self.config_path = Path(args.config)
+        if args.currency:
+            self.currency = args.currency
+        if args.refresh:
+            self.refresh = args.refresh
+        if args.sort:
+            self.sort = SortType.from_arg(args.sort)
 
     def _get_config(self):
         parser = ConfigParser(allow_no_value=True)
@@ -41,7 +47,7 @@ class Config:
                 self.positions[ticket] = int(amount)
         if "watchlist" in parser._sections:
             self.watchlist += parser._sections["watchlist"]
-        if parser.get("preferences", "polling", fallback=None):
-            self.polling = int(parser.get("preferences", "polling"))
-        if parser.get("preferences", "conversion_currency", fallback=None):
-            self.conversion_currency = parser.get("preferences", "conversion_currency").upper()
+        if parser.get("preferences", "refresh", fallback=None):
+            self.refresh = int(parser.get("preferences", "refresh"))
+        if parser.get("preferences", "currency", fallback=None):
+            self.currency = parser.get("preferences", "currency").upper()

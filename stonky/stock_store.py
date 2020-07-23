@@ -25,16 +25,15 @@ class StockStore(Mapping):
 
     def update_stocks(self):
         self._stocks = {ticket: self.api.get_quote(ticket) for ticket in self.config.all_tickets}
-        if self.config.conversion_currency:
-            forex = self.api.get_forex_rates(self.config.conversion_currency)
+        if self.config.currency:
+            forex = self.api.get_forex_rates(self.config.currency)
             for stock in self._stocks.values():
-                stock.convert_currency(forex, self.config.conversion_currency)
+                stock.convert_currency(forex, self.config.currency)
 
     @property
     def watchlist(self) -> List[Stock]:
-        return sorted(
-            [stock for ticket, stock in self.items() if ticket in self.config.watchlist],
-            key=lambda _: getattr(_, self.config.sort_key),
+        return self._try_sort(
+            [stock for ticket, stock in self.items() if ticket in self.config.watchlist]
         )
 
     @property
@@ -44,7 +43,7 @@ class StockStore(Mapping):
             stock = copy(self[ticket])
             stock.delta_amount *= amount
             results.append(stock)
-        return sorted(results, key=lambda _: getattr(_, self.config.sort_key))
+        return self._try_sort(results)
 
     @property
     def profit_and_loss(self):
@@ -61,7 +60,7 @@ class StockStore(Mapping):
         for pnl_line in pnl.values():
             pnl_line.delta_percent = pnl_line.delta_amount / pnl_line.amount_prev_close
             results.append(pnl_line)
-        return sorted(results, key=lambda _: getattr(_, self.config.sort_key))
+        return self._try_sort(results)
 
     @property
     def balances(self):
@@ -73,3 +72,8 @@ class StockStore(Mapping):
             else:
                 balances[stock.currency_code] += stock.amount_bid * amount
         return balances
+
+    def _try_sort(self, stocks: List[Stock]):
+        if self.config.sort:
+            stocks.sort(key=lambda _: getattr(_, self.config.sort.value))
+        return stocks

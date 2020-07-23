@@ -61,7 +61,7 @@ class Cli:
         try:
             while True:
                 if remaining == 0:
-                    remaining = self.config.polling
+                    remaining = self.config.refresh
                     self.stock_store.update_stocks()
                     erase_lines(self._draw_buffer + 3)
                     self.draw()
