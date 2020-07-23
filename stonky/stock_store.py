@@ -13,8 +13,6 @@ class StockStore(Mapping):
         self.config = config
         self._stocks = {}
         self.update_stocks()
-        if self.config.conversion_currency:
-            self.update_currency()
 
     def __getitem__(self, key: str):
         return self._stocks[key]
@@ -27,11 +25,10 @@ class StockStore(Mapping):
 
     def update_stocks(self):
         self._stocks = {ticket: self.api.get_quote(ticket) for ticket in self.config.all_tickets}
-
-    def update_currency(self):
-        forex = self.api.get_forex_rates(self.config.conversion_currency)
-        for stock in self._stocks.values():
-            stock.convert_currency(forex, self.config.conversion_currency)
+        if self.config.conversion_currency:
+            forex = self.api.get_forex_rates(self.config.conversion_currency)
+            for stock in self._stocks.values():
+                stock.convert_currency(forex, self.config.conversion_currency)
 
     @property
     def watchlist(self) -> List[Stock]:

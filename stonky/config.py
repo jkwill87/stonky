@@ -44,4 +44,4 @@ class Config:
         if parser.get("preferences", "polling", fallback=None):
             self.polling = int(parser.get("preferences", "polling"))
         if parser.get("preferences", "conversion_currency", fallback=None):
-            self.conversion_currency = parser.get("preferences", "conversion_currency")
+            self.conversion_currency = parser.get("preferences", "conversion_currency").upper()
