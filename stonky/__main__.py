@@ -8,19 +8,11 @@ def main():
     api = Api()
     config = Config()
     stock_store = StockStore(api, config)
-
     view = View(config, stock_store)
-
-    if config.watchlist:
-        print(view.watchlist)
-
-    if config.positions:
-        print()
-        print(view.positions)
-        print()
-        print(view.profit_and_loss)
-        print()
-        print(view.balances_str)
+    if config.polling:
+        view.draw_live()
+    else:
+        view.draw()
 
 
 if __name__ == "__main__":

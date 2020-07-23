@@ -10,7 +10,7 @@ class Config:
     positions: Dict[str, int] = field(default_factory=dict)
     watchlist: List[str] = field(default_factory=list)
     ticket: Optional[str] = None
-    polling: int = 60
+    polling: Optional[int] = None
     config_path: Path = Path.home() / ".stonky.cfg"
     sort_key = "delta_percent"
     conversion_currency = None
