@@ -1,13 +1,13 @@
+from time import sleep
 from typing import List
 
-from teletype.io import style_format, erase_lines, style_print
+from teletype.io import erase_lines, style_format, style_print
 
 from stonky.config import Config
 from stonky.stock_store import StockStore
-from time import sleep
 
 
-class View:
+class Cli:
     def __init__(self, config: Config, stock_store: StockStore):
         self.config = config
         self.stock_store = stock_store
