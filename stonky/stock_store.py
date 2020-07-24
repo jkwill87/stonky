@@ -83,6 +83,7 @@ class StockStore(Mapping):
             else:
                 balances[stock.currency_code] += stock.amount_bid * amount
         for currency_code, amount in self.settings.cash.items():
+            currency_code = self.settings.currency or currency_code
             if currency_code not in balances:
                 balances[currency_code] = amount
             else:
