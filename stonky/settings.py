@@ -13,8 +13,8 @@ class Settings:
     positions: Dict[str, int] = field(default_factory=dict)
     watchlist: List[str] = field(default_factory=list)
     config_path: Path = Path.home() / ".stonky.cfg"
-    cash: Dict[str,float] = field(default_factory=dict)
-    refresh: Optional[int] = None
+    cash: Dict[str, float] = field(default_factory=dict)
+    refresh: Optional[float] = None
     sort: Optional[SortType] = SortType.CHANGE
     currency: Optional[str] = None
 
@@ -60,17 +60,21 @@ class Settings:
             self.sort = SortType.from_arg(args.sort)
 
     def _get_config(self):
-        parser = ConfigParser(allow_no_value=True)
+        parser = ConfigParser(
+            allow_no_value=True, inline_comment_prefixes=(";", "#")
+        )
         parser.read_string(self.config_path.read_text())
-        if "positions" in parser._sections:
-            for ticket, amount in parser._sections["positions"].items():
-                self.positions[ticket] = int(amount)
-        if "watchlist" in parser._sections:
-            self.watchlist += parser._sections["watchlist"]
-        if "cash" in parser._sections:
-            for currency_code, amount in parser._sections["cash"].items():
+        if "positions" in parser:
+            for ticket, amount in parser.items("positions"):
+                self.positions[ticket.upper()] = float(amount)
+        if "watchlist" in parser:
+            self.watchlist += [
+                line[0].upper() for line in parser.items("watchlist")
+            ]
+        if "cash" in parser:
+            for currency_code, amount in parser.items("cash"):
                 self.cash[currency_code.upper()] = float(amount)
         if parser.get("preferences", "refresh", fallback=None):
-            self.refresh = int(parser.get("preferences", "refresh"))
+            self.refresh = float(parser.get("preferences", "refresh"))
         if parser.get("preferences", "currency", fallback=None):
             self.currency = parser.get("preferences", "currency").upper()

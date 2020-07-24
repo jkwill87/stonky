@@ -8,7 +8,7 @@ from stonky.stock import Stock
 
 class Api:
     def get_quote(self, ticket: str) -> Stock:
-        url = f"https://query1.finance.yahoo.com/v10/finance/quoteSummary/{ticket}"
+        url = f"https://query1.finance.yahoo.com/v11/finance/quoteSummary/{ticket}"
         params = {"modules": "summaryDetail,price"}
         response = self._query(url, params)
         summary_data = response["quoteSummary"]["result"][0]["summaryDetail"]
@@ -16,13 +16,15 @@ class Api:
         return Stock(
             ticket=ticket,
             currency_code=price_data["currency"],
-            amount_bid=summary_data["bid"]["raw"],
-            amount_ask=summary_data["ask"]["raw"],
-            amount_low=summary_data["dayLow"]["raw"],
-            amount_high=summary_data["dayHigh"]["raw"],
-            amount_prev_close=summary_data["previousClose"]["raw"],
-            delta_amount=price_data["regularMarketChange"]["raw"],
-            delta_percent=price_data["regularMarketChangePercent"]["raw"],
+            amount_bid=summary_data["bid"].get("raw", 0.0),
+            amount_ask=summary_data["ask"].get("raw", 0.0),
+            amount_low=summary_data["dayLow"].get("raw", 0.0),
+            amount_high=summary_data["dayHigh"].get("raw", 0.0),
+            amount_prev_close=summary_data["previousClose"].get("raw", 0.0),
+            delta_amount=price_data["regularMarketChange"].get("raw", 0.0),
+            delta_percent=price_data["regularMarketChangePercent"].get(
+                "raw", 0.0
+            ),
             volume=summary_data["volume"]["raw"],
         )
 
