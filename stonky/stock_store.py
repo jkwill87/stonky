@@ -82,6 +82,11 @@ class StockStore(Mapping):
                 balances[stock.currency_code] = stock.amount_bid * amount
             else:
                 balances[stock.currency_code] += stock.amount_bid * amount
+        for currency_code, amount in self.settings.cash.items():
+            if currency_code not in balances:
+                balances[currency_code] = amount
+            else:
+                balances[currency_code] += amount
         return balances
 
     def _try_sort(self, stocks: List[Stock]):

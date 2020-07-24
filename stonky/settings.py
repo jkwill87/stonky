@@ -13,6 +13,7 @@ class Settings:
     positions: Dict[str, int] = field(default_factory=dict)
     watchlist: List[str] = field(default_factory=list)
     config_path: Path = Path.home() / ".stonky.cfg"
+    cash: Dict[str,float] = field(default_factory=dict)
     refresh: Optional[int] = None
     sort: Optional[SortType] = SortType.CHANGE
     currency: Optional[str] = None
@@ -66,6 +67,9 @@ class Settings:
                 self.positions[ticket] = int(amount)
         if "watchlist" in parser._sections:
             self.watchlist += parser._sections["watchlist"]
+        if "cash" in parser._sections:
+            for currency_code, amount in parser._sections["cash"].items():
+                self.cash[currency_code.upper()] = float(amount)
         if parser.get("preferences", "refresh", fallback=None):
             self.refresh = int(parser.get("preferences", "refresh"))
         if parser.get("preferences", "currency", fallback=None):
