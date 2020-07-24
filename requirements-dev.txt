@@ -1,3 +1,4 @@
 black
+pylint
 pytest
 vbump
