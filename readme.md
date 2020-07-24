@@ -6,6 +6,10 @@ stonky is a simple command line dashboard for monitoring stocks. It can provide 
 
 <img src="https://github.com/jkwill87/stonky/raw/master/assets/screenshot.png" width="450"/>
 
+## Install
+
+`$ pip3 install --user stonky`
+
 ## Config
 
 stonky is mainly configured through a config file. By default it looks for and loads a file named **`.stonky.cfg`** in your home directory. You can also specify a custom path by passing the `--config=<PATH>` command line argument which can be useful to monitor multiple watchlists. If you run stonky without a config file it will load [the example one](https://github.com/jkwill87/stonky/blob/master/stonky/__example.cfg) by default.
