@@ -8,10 +8,6 @@ clean-build:
 	@find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__
 	@rm -rf stonky.egg-info build dist
 
-clean-demo:
-	$(info * cleaning demo files)
-	@rm -rf build dist *.egg-info demo
-
 clean-venv:
 	$(info * removing venv files)
 	@deactivate 2> /dev/null || true
