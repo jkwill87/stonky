@@ -2,7 +2,7 @@ from datetime import date
 from platform import platform, python_version
 from sys import argv, gettrace
 
-from teletype.__version__ import VERSION as teletype_version
+from teletype import VERSION as teletype_version
 
 from stonky.__version__ import VERSION
 from stonky.types import SortType

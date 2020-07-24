@@ -1,4 +1,3 @@
-include example.cfg
 include license.txt
 include readme.md
 include requirements.txt

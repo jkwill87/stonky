@@ -1,1 +1,1 @@
-teletype
+teletype>=1.0

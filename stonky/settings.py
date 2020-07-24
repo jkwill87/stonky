@@ -68,7 +68,9 @@ class Settings:
             allow_no_value=True, inline_comment_prefixes=(";", "#")
         )
         if not self.config_path.exists():
-            self.config_path = Path(resource_filename("stonky", "example.cfg"))
+            self.config_path = Path(
+                resource_filename("stonky", "__example.cfg")
+            )
         parser.read_string(self.config_path.read_text())
         if "positions" in parser:
             for ticket, amount in parser.items("positions"):

@@ -22,6 +22,7 @@ setup(
     long_description_content_type="text/markdown",
     name="stonky",
     packages=["stonky"],
+    package_data={"stonky": ["__example.cfg"]},
     python_requires="~=3.6",
     url="https://github.com/jkwill87/stonky",
     version=VERSION,
