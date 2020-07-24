@@ -4,7 +4,7 @@
 
 ## Config
 
-stonky is mainly configured through a config file. By default it looks for and loads a file named **`.stonky.cfg`** in your home directory. You can specify a custom path by passing the `--config=<PATH>` command line argument. Checkout [example.cfg](https://raw.githubusercontent.com/jkwill87/stonky/master/example.cfg) for inspiration.
+stonky is mainly configured through a config file. By default it looks for and loads a file named **`.stonky.cfg`** in your home directory. You can specify a custom path by passing the `--config=<PATH>` command line argument. Checkout [example.cfg](https://github.com/jkwill87/stonky/blob/master/example.cfg) for inspiration.
 
 ## Arguments
 
