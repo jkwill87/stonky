@@ -1,3 +1,5 @@
+![unittest](https://github.com/jkwill87/stonky/workflows/unittest/badge.svg)
+
 # stonky
 
 stonky is a simple command line dashboard for monitoring stocks. It can provide a information from international exchanges and various other types of securities, e.g. cryptocurrencies, index funds, bonds, ETFS, REITs, etc. It pulls live data from [Yahoo! Finance](https://finance.yahoo.com) so anything it supports stonky can too.
