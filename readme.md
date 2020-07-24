@@ -1,6 +1,6 @@
 ![pypi](https://img.shields.io/pypi/v/stonky?style=for-the-badge)
 ![unittest](https://img.shields.io/github/workflow/status/jkwill87/stocky/unittest?style=for-the-badge)
-[![licence](https://img.shields.io/github/license/jkwill87/mnamer.svg?style=for-the-badge)](https://en.wikipedia.org/wiki/MIT_License)
+[![licence](https://img.shields.io/github/license/jkwill87/mnamer.svg?style=for-the-badge)](https://github.com/jkwill87/stonky/blob/master/license.txt)
 [![style black](https://img.shields.io/badge/Style-Black-black.svg?style=for-the-badge)](https://github.com/ambv/black)
 
 # stonky
