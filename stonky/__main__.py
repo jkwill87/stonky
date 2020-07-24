@@ -1,15 +1,15 @@
 from stonky.api import Api
 from stonky.cli import Cli
-from stonky.config import Config
+from stonky.settings import Settings
 from stonky.stock_store import StockStore
 
 
 def main():
     api = Api()
-    config = Config()
-    stock_store = StockStore(api, config)
-    cli = Cli(config, stock_store)
-    if config.refresh:
+    settings = Settings()
+    stock_store = StockStore(api, settings)
+    cli = Cli(settings, stock_store)
+    if settings.refresh:
         cli.draw_live()
     else:
         cli.draw()

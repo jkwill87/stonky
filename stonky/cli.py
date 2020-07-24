@@ -3,13 +3,13 @@ from typing import List
 
 from teletype.io import erase_lines, style_format, style_print
 
-from stonky.config import Config
+from stonky.settings import Settings
 from stonky.stock_store import StockStore
 
 
 class Cli:
-    def __init__(self, config: Config, stock_store: StockStore):
-        self.config = config
+    def __init__(self, settings: Settings, stock_store: StockStore):
+        self.settings = settings
         self.stock_store = stock_store
         self._draw_buffer = 0
 
@@ -43,10 +43,10 @@ class Cli:
 
     def draw(self):
         lines = []
-        if self.config.watchlist:
+        if self.settings.watchlist:
             lines += self.watchlist
 
-        if self.config.positions:
+        if self.settings.positions:
             lines.append("")
             lines += self.positions
             lines.append("")
@@ -61,7 +61,7 @@ class Cli:
         try:
             while True:
                 if remaining == 0:
-                    remaining = self.config.refresh
+                    remaining = self.settings.refresh
                     self.stock_store.update_stocks()
                     erase_lines(self._draw_buffer + 3)
                     self.draw()

@@ -3,14 +3,14 @@ from copy import copy
 from typing import List
 
 from stonky.api import Api
-from stonky.config import Config
+from stonky.settings import Settings
 from stonky.stock import Stock
 
 
 class StockStore(Mapping):
-    def __init__(self, api: Api, config: Config):
+    def __init__(self, api: Api, config: Settings):
         self.api = api
-        self.config = config
+        self.settings = config
         self._stocks = {}
         self.update_stocks()
 
@@ -26,12 +26,12 @@ class StockStore(Mapping):
     def update_stocks(self):
         self._stocks = {
             ticket: self.api.get_quote(ticket)
-            for ticket in self.config.all_tickets
+            for ticket in self.settings.all_tickets
         }
-        if self.config.currency:
-            forex = self.api.get_forex_rates(self.config.currency)
+        if self.settings.currency:
+            forex = self.api.get_forex_rates(self.settings.currency)
             for stock in self._stocks.values():
-                stock.convert_currency(forex, self.config.currency)
+                stock.convert_currency(forex, self.settings.currency)
 
     @property
     def watchlist(self) -> List[Stock]:
@@ -39,14 +39,14 @@ class StockStore(Mapping):
             [
                 stock
                 for ticket, stock in self.items()
-                if ticket in self.config.watchlist
+                if ticket in self.settings.watchlist
             ]
         )
 
     @property
     def positions(self) -> List[Stock]:
         results = []
-        for ticket, amount in self.config.positions.items():
+        for ticket, amount in self.settings.positions.items():
             stock = copy(self[ticket])
             stock.delta_amount *= amount
             results.append(stock)
@@ -55,7 +55,7 @@ class StockStore(Mapping):
     @property
     def profit_and_loss(self):
         pnl = {}
-        for ticket, amount in self.config.positions.items():
+        for ticket, amount in self.settings.positions.items():
             stock = copy(self[ticket])
             stock.delta_amount *= amount
             if stock.currency_code not in pnl:
@@ -76,7 +76,7 @@ class StockStore(Mapping):
     @property
     def balances(self):
         balances = {}
-        for ticket, amount in self.config.positions.items():
+        for ticket, amount in self.settings.positions.items():
             stock = self[ticket]
             if stock.currency_code not in balances:
                 balances[stock.currency_code] = stock.amount_bid * amount
@@ -85,6 +85,6 @@ class StockStore(Mapping):
         return balances
 
     def _try_sort(self, stocks: List[Stock]):
-        if self.config.sort:
-            stocks.sort(key=lambda _: getattr(_, self.config.sort.value))
+        if self.settings.sort:
+            stocks.sort(key=lambda _: getattr(_, self.settings.sort.value))
         return stocks

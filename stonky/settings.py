@@ -9,7 +9,7 @@ from stonky.types import SortType
 
 
 @dataclass
-class Config:
+class Settings:
     positions: Dict[str, int] = field(default_factory=dict)
     watchlist: List[str] = field(default_factory=list)
     config_path: Path = Path.home() / ".stonky.cfg"
