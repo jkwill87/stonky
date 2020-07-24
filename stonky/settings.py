@@ -7,6 +7,7 @@ from typing import Dict, List, Optional, get_type_hints
 from stonky.const import EPILOG
 from stonky.forex import Forex
 from stonky.types import SortType
+from pkg_resources import resource_filename
 
 
 @dataclass
@@ -66,6 +67,8 @@ class Settings:
         parser = ConfigParser(
             allow_no_value=True, inline_comment_prefixes=(";", "#")
         )
+        if not self.config_path.exists():
+            self.config_path = Path(resource_filename("stonky", "example.cfg"))
         parser.read_string(self.config_path.read_text())
         if "positions" in parser:
             for ticket, amount in parser.items("positions"):
