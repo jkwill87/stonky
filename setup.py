@@ -13,7 +13,7 @@ with open("requirements.txt", "r") as fp:
 setup(
     author="Jessy Williams",
     author_email="jessy@jessywilliams.com",
-    description="A stock viewing cli tool",
+    description="A simple command line dashboard for monitoring stocks",
     entry_points={"console_scripts": ["stonky=stonky.__main__:main"]},
     include_package_data=True,
     install_requires=REQUIREMENTS,
