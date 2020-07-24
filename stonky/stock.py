@@ -24,13 +24,19 @@ class Stock:
     @property
     def volume_str(self) -> str:
         if self.volume >= 1_000_000_000:
-            d = Decimal(self.volume / 1_000_000_000).quantize(Decimal(".1"), rounding="ROUND_DOWN")
+            d = Decimal(self.volume / 1_000_000_000).quantize(
+                Decimal(".1"), rounding="ROUND_DOWN"
+            )
             s = str(d).rstrip(".0") + "B"
         elif self.volume >= 1_000_000:
-            d = Decimal(self.volume / 1_000_000).quantize(Decimal(".1"), rounding="ROUND_DOWN")
+            d = Decimal(self.volume / 1_000_000).quantize(
+                Decimal(".1"), rounding="ROUND_DOWN"
+            )
             s = str(d).rstrip(".0") + "M"
         elif self.volume >= 1_000:
-            d = Decimal(self.volume / 1_000).quantize(Decimal(".1"), rounding="ROUND_DOWN")
+            d = Decimal(self.volume / 1_000).quantize(
+                Decimal(".1"), rounding="ROUND_DOWN"
+            )
             s = str(d).rstrip(".0") + "K"
         else:
             s = f"{self.volume:.2f}"
@@ -57,7 +63,9 @@ class Stock:
         s += self.volume_str.ljust(8)
         s += "@ " + f"{self.amount_bid:.2f}".ljust(8)
         s += symbol
-        s += f"{self.delta_amount:+,.2f} {self.delta_percent*100:+.2f}%".rjust(15)
+        s += f"{self.delta_amount:+,.2f} {self.delta_percent*100:+.2f}%".rjust(
+            15
+        )
         return s
 
     @property

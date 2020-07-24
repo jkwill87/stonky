@@ -64,27 +64,39 @@ def test_colour__green():
 
 def test_ticker_tape__down():
     stock = Stock(
-        ticket="AMD", delta_amount=-10.123, delta_percent=0.156, volume=100.123, amount_bid=200.553
+        ticket="AMD",
+        delta_amount=-10.123,
+        delta_percent=0.156,
+        volume=100.123,
+        amount_bid=200.553,
     )
     assert stock.ticker_tape == "AMD     100.12  @ 200.55  ▼ -10.12 +15.60%"
 
 
 def test_ticker_tape__zero():
     stock = Stock(
-        ticket="AMD", delta_amount=0.0, delta_percent=0.156, volume=100.123, amount_bid=200.553
+        ticket="AMD",
+        delta_amount=0.0,
+        delta_percent=0.156,
+        volume=100.123,
+        amount_bid=200.553,
     )
     assert stock.ticker_tape == "AMD     100.12  @ 200.55  ▬  +0.00 +15.60%"
 
 
 def test_ticker_tape_up():
     stock = Stock(
-        ticket="AMD", delta_amount=10.123, delta_percent=0.156, volume=100.123, amount_bid=200.553
+        ticket="AMD",
+        delta_amount=10.123,
+        delta_percent=0.156,
+        volume=100.123,
+        amount_bid=200.553,
     )
     assert stock.ticker_tape == "AMD     100.12  @ 200.55  ▲ +10.12 +15.60%"
 
 
 def test_position():
-    stock = Stock(ticket="AAPL",delta_amount=12.345, delta_percent=0.0678)
+    stock = Stock(ticket="AAPL", delta_amount=12.345, delta_percent=0.0678)
     assert stock.position == "AAPL    +12.35  +6.78%"
 
 

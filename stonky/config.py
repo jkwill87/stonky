@@ -27,7 +27,9 @@ class Config:
 
     def _get_args(self):
         parser = ArgumentParser(prog="stonky")
-        parser.add_argument("--config", metavar="PATH", help="sets path to config file")
+        parser.add_argument(
+            "--config", metavar="PATH", help="sets path to config file"
+        )
         parser.add_argument(
             "--currency",
             metavar="CODE",
@@ -35,7 +37,10 @@ class Config:
             help="converts all amounts using current forex rates",
         )
         parser.add_argument(
-            "--refresh", metavar="SECONDS", type=int, help="refreshes output on set interval"
+            "--refresh",
+            metavar="SECONDS",
+            type=int,
+            help="refreshes output on set interval",
         )
         parser.add_argument(
             "--sort",

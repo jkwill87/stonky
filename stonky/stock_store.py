@@ -24,7 +24,10 @@ class StockStore(Mapping):
         return len(self._stocks)
 
     def update_stocks(self):
-        self._stocks = {ticket: self.api.get_quote(ticket) for ticket in self.config.all_tickets}
+        self._stocks = {
+            ticket: self.api.get_quote(ticket)
+            for ticket in self.config.all_tickets
+        }
         if self.config.currency:
             forex = self.api.get_forex_rates(self.config.currency)
             for stock in self._stocks.values():
@@ -33,7 +36,11 @@ class StockStore(Mapping):
     @property
     def watchlist(self) -> List[Stock]:
         return self._try_sort(
-            [stock for ticket, stock in self.items() if ticket in self.config.watchlist]
+            [
+                stock
+                for ticket, stock in self.items()
+                if ticket in self.config.watchlist
+            ]
         )
 
     @property
@@ -54,11 +61,15 @@ class StockStore(Mapping):
             if stock.currency_code not in pnl:
                 pnl[stock.currency_code] = stock
             else:
-                pnl[stock.currency_code].amount_prev_close += stock.amount_prev_close
+                pnl[
+                    stock.currency_code
+                ].amount_prev_close += stock.amount_prev_close
                 pnl[stock.currency_code].delta_amount += stock.delta_amount
         results = []
         for pnl_line in pnl.values():
-            pnl_line.delta_percent = pnl_line.delta_amount / pnl_line.amount_prev_close
+            pnl_line.delta_percent = (
+                pnl_line.delta_amount / pnl_line.amount_prev_close
+            )
             results.append(pnl_line)
         return self._try_sort(results)
 
