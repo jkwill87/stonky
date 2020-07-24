@@ -7,7 +7,7 @@ from stonky.settings import Settings
 from stonky.stock_store import StockStore
 
 
-class Cli:
+class Tty:
     def __init__(self, settings: Settings, stock_store: StockStore):
         self.settings = settings
         self.stock_store = stock_store
