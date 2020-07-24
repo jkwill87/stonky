@@ -7,13 +7,6 @@ from stonky.stock import Stock
 
 
 class Api:
-    @staticmethod
-    def _query(url: str, params: dict) -> dict:
-        if params:
-            url += "?" + urlencode(params)
-        response = urlopen(url)
-        return json.loads(response.read())
-
     def get_quote(self, ticket: str) -> Stock:
         url = f"https://query1.finance.yahoo.com/v10/finance/quoteSummary/{ticket}"
         params = {"modules": "summaryDetail,price"}
@@ -38,3 +31,10 @@ class Api:
         params = {"base": base}
         response = self._query(url, params)
         return Forex(**response["rates"])
+
+    @staticmethod
+    def _query(url: str, params: dict) -> dict:
+        if params:
+            url += "?" + urlencode(params)
+        response = urlopen(url)
+        return json.loads(response.read())
