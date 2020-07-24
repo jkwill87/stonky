@@ -71,8 +71,8 @@ class Tty:
                 else:
                     erase_lines(3)
                     remaining -= 1
-                style_print(f"\nrefreshing in {remaining}", style="blue")
-                style_print("press CTRL-C to quit", style="blue")
+                style_print(f"\nrefreshing in {remaining}", style="cyan")
+                style_print("press CTRL-C to quit", style="cyan")
                 sleep(1)
         except KeyboardInterrupt:
             pass
