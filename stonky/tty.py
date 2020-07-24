@@ -1,14 +1,10 @@
-from datetime import date
-from platform import platform, python_version
-from sys import argv
 from time import sleep
 from traceback import format_exc
 from typing import List
 
-from teletype.__version__ import VERSION as teletype_version
 from teletype.io import erase_lines, style_format, style_print
 
-from stonky.__version__ import VERSION
+from stonky.const import SYSTEM
 from stonky.settings import Settings
 from stonky.stock_store import StockStore
 
@@ -82,19 +78,8 @@ class Tty:
 
 
 def crash_report():
-    system_information = {
-        "date": date.today(),
-        "platform": platform(),
-        "arguments": argv[1:],
-        "python version": python_version(),
-        "stonky version": VERSION,
-        "teletype version": teletype_version,
-    }
     system_information_str = "\n".join(
-        [
-            f" - {k} = {getattr(v, 'value', v)}"
-            for k, v in system_information.items()
-        ]
+        [f" - {k} = {getattr(v, 'value', v)}" for k, v in SYSTEM.items()]
     )
     s = f"""
 ============================== CRASH REPORT BEGIN ==============================

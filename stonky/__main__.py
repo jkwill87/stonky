@@ -3,6 +3,8 @@ from stonky.settings import Settings
 from stonky.stock_store import StockStore
 from stonky.tty import Tty, crash_report
 
+from stonky.const import IS_DEBUG
+
 
 def main():
     try:
@@ -15,7 +17,10 @@ def main():
         else:
             tty.draw()
     except:
-        crash_report()
+        if IS_DEBUG:
+            raise
+        else:
+            crash_report()
 
 
 if __name__ == "__main__":
