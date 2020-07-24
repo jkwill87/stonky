@@ -66,14 +66,15 @@ class Settings:
         parser.read_string(self.config_path.read_text())
         if "positions" in parser:
             for ticket, amount in parser.items("positions"):
-                self.positions[ticket.upper()] = float(amount)
+                amount = float(amount.replace(",", ""))
+                self.positions[ticket.upper()] = amount
         if "watchlist" in parser:
-            self.watchlist += [
-                line[0].upper() for line in parser.items("watchlist")
-            ]
+            tickets = [line[0].upper() for line in parser.items("watchlist")]
+            self.watchlist += tickets
         if "cash" in parser:
             for currency_code, amount in parser.items("cash"):
-                self.cash[currency_code.upper()] = float(amount)
+                amount = float(amount.replace(",", ""))
+                self.cash[currency_code.upper()] = amount
         if parser.get("preferences", "refresh", fallback=None):
             self.refresh = float(parser.get("preferences", "refresh"))
         if parser.get("preferences", "currency", fallback=None):
