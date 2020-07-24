@@ -58,6 +58,7 @@ class StockStore(Mapping):
         for ticket, amount in self.settings.positions.items():
             stock = copy(self[ticket])
             stock.delta_amount *= amount
+            stock.amount_prev_close *= amount
             if stock.currency_code not in pnl:
                 pnl[stock.currency_code] = stock
             else:
