@@ -1,6 +1,6 @@
 # stonky
 
-stonky is a simple command line dashboard for stocks. It pulls live data from [Yahoo Finance](finance.yahoo.com).
+stonky is a simple command line dashboard for stocks. It pulls live data from [Yahoo Finance](https://finance.yahoo.com).
 
 ## Config
 
