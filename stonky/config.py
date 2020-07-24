@@ -3,6 +3,8 @@ from configparser import ConfigParser
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional
+
+from stonky.forex import Forex
 from stonky.types import SortType
 
 
@@ -24,11 +26,23 @@ class Config:
         self._get_config()
 
     def _get_args(self):
-        parser = ArgumentParser()
-        parser.add_argument("--config")
-        parser.add_argument("--currency", type=int)
-        parser.add_argument("--refresh", type=int)
-        parser.add_argument("--sort", choices=SortType.arg_choices())
+        parser = ArgumentParser(prog="stonky")
+        parser.add_argument("--config", metavar="PATH", help="sets path to config file")
+        parser.add_argument(
+            "--currency",
+            metavar="CODE",
+            choices=Forex.__annotations__.keys(),
+            help="converts all amounts using current forex rates",
+        )
+        parser.add_argument(
+            "--refresh", metavar="SECONDS", type=int, help="refreshes output on set interval"
+        )
+        parser.add_argument(
+            "--sort",
+            metavar="FIELD",
+            choices=SortType.arg_choices(),
+            help="orders stocks by field",
+        )
         args = parser.parse_args()
         if args.config:
             self.config_path = Path(args.config)
