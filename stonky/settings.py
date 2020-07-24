@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 from configparser import ConfigParser
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, get_type_hints
 
 from stonky.forex import Forex
 from stonky.types import SortType
@@ -34,7 +34,7 @@ class Settings:
         parser.add_argument(
             "--currency",
             metavar="CODE",
-            choices=Forex.__annotations__.keys(),
+            choices=get_type_hints(Forex).keys(),
             help="converts all amounts using current forex rates",
         )
         parser.add_argument(
