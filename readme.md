@@ -1,6 +1,6 @@
 # stonky
 
-
+stonky is a simple command line dashboard for stocks. It pulls live data from [Yahoo Finance](finance.yahoo.com).
 
 ## Config
 
@@ -21,4 +21,4 @@ optional arguments:
   --sort FIELD       orders stocks by field
 ```
 
-Sort fields can be one of `ticket`, `bid`, `ask`, `low`, `high`, `close`, `change`, `volume`.
+Sort fields can be one of **`ticket`**, **`bid`**, **`ask`**, **`low`**, **`high`**, **`close`**, **`change`**, or **`volume`**.
