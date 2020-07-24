@@ -2,13 +2,11 @@
 
 
 
-## Settings
+## Config
 
-### Config
+stonky is mainly configured through a config file. By default it looks for and loads a file named **`.stonky.cfg`** in your home directory. You can specify a custom path by passing the `--config=<PATH>` command line argument. Checkout [example.cfg](https://raw.githubusercontent.com/jkwill87/stonky/master/example.cfg) for inspiration.
 
-stonky is mainly configured through a config file. By default it looks for and loads a file named **`.stonky.cfg`** in the users home directory. You can specify a custom path by passing the `--config=<PATH>` command line argument. Take a look at [example.cfg](https://raw.githubusercontent.com/jkwill87/stonky/master/example.cfg) for inspiration.
-
-### Arguments
+## Arguments
 
 You can set or override some of stonky's settings via command-line arguments.
 
@@ -23,4 +21,4 @@ optional arguments:
   --sort FIELD       orders stocks by field
 ```
 
-Most of these should be pretty straight forward. Sort fields can be one of `ticket`, `bid`, `ask`, `low`, `high`, `close`, `change`, `volume`.
+Sort fields can be one of `ticket`, `bid`, `ask`, `low`, `high`, `close`, `change`, `volume`.
