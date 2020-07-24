@@ -5,6 +5,7 @@ from sys import argv, gettrace
 from teletype.__version__ import VERSION as teletype_version
 
 from stonky.__version__ import VERSION
+from stonky.types import SortType
 
 IS_DEBUG = gettrace() is not None
 SYSTEM = {
@@ -15,3 +16,9 @@ SYSTEM = {
     "stonky version": VERSION,
     "teletype version": teletype_version,
 }
+
+EPILOG = f"""
+FIELDS can be one of {", ".join(SortType.arg_choices())}
+
+Visit https://github.com/jkwill87/stonky for more information.
+"""

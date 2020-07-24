@@ -1,9 +1,10 @@
-from argparse import ArgumentParser
+from argparse import ArgumentParser, RawTextHelpFormatter
 from configparser import ConfigParser
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, get_type_hints
 
+from stonky.const import EPILOG
 from stonky.forex import Forex
 from stonky.types import SortType
 
@@ -27,7 +28,9 @@ class Settings:
         self._get_config()
 
     def _get_args(self):
-        parser = ArgumentParser(prog="stonky")
+        parser = ArgumentParser(
+            prog="stonky", epilog=EPILOG, formatter_class=RawTextHelpFormatter
+        )
         parser.add_argument(
             "--config", metavar="PATH", help="sets path to config file"
         )

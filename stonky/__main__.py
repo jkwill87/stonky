@@ -16,6 +16,8 @@ def main():
             tty.draw_live()
         else:
             tty.draw()
+    except SystemExit:
+        pass
     except:
         if IS_DEBUG:
             raise
