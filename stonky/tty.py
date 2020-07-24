@@ -65,8 +65,9 @@ class Tty:
                 if remaining == 0:
                     remaining = self.settings.refresh
                     self.stock_store.update_stocks()
-                    erase_lines(self._draw_buffer + 3)
+                    erase_lines(self._draw_buffer)
                     self.draw()
+                    self._draw_buffer += 3
                 else:
                     erase_lines(3)
                     remaining -= 1
