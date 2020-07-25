@@ -33,3 +33,9 @@ optional arguments:
 
 FIELDS can be one of ticket, bid, ask, low, high, close, change, volume
 ```
+
+## Contributions
+
+Community contributions are a welcome addition to the project. In order to be merged upsteam any additions will need to be formatted with [black](https://black.readthedocs.io) for consistency with the rest of the project and pass the continuous integration tests run against the PR. Before introducing any major features or changes to the configuration api please consider opening [an issue](https://github.com/jkwill87/stonky/issues) to outline your proposal.
+
+Bug reports are also welcome on the [issue page](https://github.com/jkwill87/stonky/issues). Please include any generated crash reports if applicable. Feature requests are welcome but consider checking out [if it is in the works](https://github.com/jkwill87/stonky/issues?q=label%3Arequest) first to avoid duplication.
