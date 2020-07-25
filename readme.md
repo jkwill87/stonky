@@ -3,9 +3,9 @@
 [![licence](https://img.shields.io/github/license/jkwill87/mnamer.svg?style=for-the-badge)](https://github.com/jkwill87/stonky/blob/master/license.txt)
 [![style black](https://img.shields.io/badge/Style-Black-black.svg?style=for-the-badge)](https://github.com/ambv/black)
 
-# stonky
+# 📈 stonky
 
-stonky is a simple command line dashboard for monitoring stocks. It can provide a information from international exchanges and various other types of securities, e.g. cryptocurrencies, index funds, bonds, ETFS, REITs, etc. It pulls live data from [Yahoo! Finance](https://finance.yahoo.com) so anything it supports stonky can too.
+stonky is a simple command line dashboard for monitoring stocks. It pulls live data from [Yahoo! Finance](https://finance.yahoo.com) so anything it can support, e.g. international exchanges, crypocurrencies, etc., stonky can too.
 
 ![screenshot](https://github.com/jkwill87/stonky/raw/master/assets/screenshot.png)
 
