@@ -31,7 +31,7 @@ optional arguments:
   --refresh SECONDS  refreshes output on set interval
   --sort FIELD       orders stocks by field
 
-FIELDS can be one of ticket, bid, ask, low, high, close, change, volume
+FIELDS can be one of ticket, amount, low, high, close, change, volume
 ```
 
 ## Contributions

@@ -25,7 +25,8 @@ class Api:
             delta_percent=price_data["regularMarketChangePercent"].get(
                 "raw", 0.0
             ),
-            volume=summary_data["volume"]["raw"],
+            market_price=price_data["regularMarketPrice"].get("raw", 0.0),
+            volume=summary_data["volume"].get("raw", 0.0),
         )
 
     def get_forex_rates(self, base: str) -> Forex:

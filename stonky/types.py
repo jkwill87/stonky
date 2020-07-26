@@ -5,8 +5,7 @@ from typing import Optional, Tuple
 
 class SortType(Enum):
     TICKET = "ticket"
-    BID = "amount_bid"
-    ASK = "amount_ask"
+    AMOUNT = "amount_current"
     LOW = "amount_low"
     HIGH = "amount_high"
     CLOSE = "amount_prev_close"

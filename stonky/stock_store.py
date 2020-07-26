@@ -80,9 +80,9 @@ class StockStore(Mapping):
         for ticket, amount in self.settings.positions.items():
             stock = self[ticket]
             if stock.currency_code not in balances:
-                balances[stock.currency_code] = stock.amount_bid * amount
+                balances[stock.currency_code] = stock.amount_current * amount
             else:
-                balances[stock.currency_code] += stock.amount_bid * amount
+                balances[stock.currency_code] += stock.amount_current * amount
         for currency_code, amount in self.settings.cash.items():
             currency_code = self.settings.currency or currency_code
             if currency_code not in balances:

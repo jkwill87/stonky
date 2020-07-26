@@ -9,7 +9,7 @@ def test_post_init():
 
 def test_volume_str__hundreds__lower():
     stock = Stock(volume=0)
-    assert stock.volume_str == "0.00"
+    assert stock.volume_str == ""
 
 
 def test_volume_str__hundreds__upper():
