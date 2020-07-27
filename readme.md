@@ -9,9 +9,9 @@ stonky is a simple command line dashboard for monitoring stocks. It pulls live d
 
 ![screenshot](https://github.com/jkwill87/stonky/raw/master/assets/screenshot.png)
 
-## Install
+## Installing and Upgrading
 
-`$ pip3 install --user stonky`
+`$ pip3 install --user --upgrade stonky`
 
 ## Config
 
