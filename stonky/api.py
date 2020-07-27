@@ -1,10 +1,11 @@
+from typing import Optional
 from urllib.parse import urlencode
+
 from aiohttp import ClientSession
 
 from stonky.exceptions import StonkyException
 from stonky.forex import Forex
 from stonky.stock import Stock
-from typing import Optional
 
 
 class Api:

@@ -1,5 +1,6 @@
-from stonky.stock import Stock
 from unittest import TestCase
+
+from stonky.stock import Stock
 
 
 class TestStock(TestCase):

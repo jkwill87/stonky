@@ -22,6 +22,9 @@ class Stock:
         self.ticket = self.ticket.upper()
         self.currency_code = self.currency_code.upper()
 
+    def __str__(self):
+        return self.ticker_tape
+
     @property
     def amount_current(self):
         if self.amount_bid:

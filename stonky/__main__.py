@@ -1,9 +1,10 @@
+from asyncio import get_event_loop
+
 from stonky.api import Api
 from stonky.const import IS_DEBUG
 from stonky.settings import Settings
 from stonky.stock_store import StockStore
 from stonky.tty import Tty, crash_report
-from asyncio import get_event_loop
 
 
 async def main():

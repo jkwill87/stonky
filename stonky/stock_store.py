@@ -1,3 +1,4 @@
+import asyncio
 from collections.abc import Mapping
 from copy import copy
 from typing import List
@@ -5,7 +6,6 @@ from typing import List
 from stonky.api import Api
 from stonky.settings import Settings
 from stonky.stock import Stock
-import asyncio
 
 
 class StockStore(Mapping):
@@ -95,5 +95,7 @@ class StockStore(Mapping):
 
     def _try_sort(self, stocks: List[Stock]):
         if self.settings.sort:
-            stocks.sort(key=lambda _: getattr(_, self.settings.sort.value))
+            reverse = self.settings.sort.value.endswith("_desc")
+            sort, *_ = self.settings.sort.value.rsplit("_desc")
+            stocks.sort(key=lambda _: getattr(_, sort), reverse=reverse)
         return stocks

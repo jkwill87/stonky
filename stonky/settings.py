@@ -4,10 +4,11 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, get_type_hints
 
+from pkg_resources import resource_filename
+
 from stonky.const import EPILOG
 from stonky.forex import Forex
 from stonky.types import SortType
-from pkg_resources import resource_filename
 
 
 @dataclass

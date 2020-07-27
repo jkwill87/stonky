@@ -1,6 +1,7 @@
 from datetime import date
 from platform import platform, python_version
 from sys import argv, gettrace
+from textwrap import fill
 
 from teletype import VERSION as teletype_version
 
@@ -17,8 +18,10 @@ SYSTEM = {
     "teletype version": teletype_version,
 }
 
-EPILOG = f"""
-FIELDS can be one of {", ".join(SortType.arg_choices())}
+EPILOG = fill(
+    f"""FIELDS can be one of {", ".join(SortType.arg_choices())}.
 
 Visit https://github.com/jkwill87/stonky for more information.
-"""
+""",
+    80,
+)
