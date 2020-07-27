@@ -31,7 +31,7 @@ class StockStore(Mapping):
             stock.ticket: stock for stock in await asyncio.gather(*futures)
         }
         if self.settings.currency:
-            forex = self.api.get_forex_rates(self.settings.currency)
+            forex = await self.api.get_forex_rates(self.settings.currency)
             for stock in self._stocks.values():
                 stock.convert_currency(forex, self.settings.currency)
 
