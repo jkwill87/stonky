@@ -7,6 +7,11 @@ from stonky.stock_store import StockStore
 from stonky.tty import Tty, crash_report
 
 
+def entrypoint():
+    loop = get_event_loop()
+    loop.run_until_complete(main())
+
+
 async def main():
     try:
         async with Api() as api:
@@ -28,5 +33,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    loop = get_event_loop()
-    loop.run_until_complete(main())
+    entrypoint()

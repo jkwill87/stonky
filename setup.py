@@ -14,7 +14,7 @@ setup(
     author="Jessy Williams",
     author_email="jessy@jessywilliams.com",
     description="A simple command line dashboard for monitoring stocks",
-    entry_points={"console_scripts": ["stonky=stonky.__main__:main"]},
+    entry_points={"console_scripts": ["stonky=stonky.__main__:entrypoint"]},
     include_package_data=True,
     install_requires=REQUIREMENTS,
     license="MIT",
