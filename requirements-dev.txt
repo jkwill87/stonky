@@ -1,7 +1,6 @@
 -r requirements.txt
 black
 pylint
-pytest
 vbump
 twine
 wheel

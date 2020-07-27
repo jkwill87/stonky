@@ -5,6 +5,7 @@ from typing import List
 from stonky.api import Api
 from stonky.settings import Settings
 from stonky.stock import Stock
+import asyncio
 
 
 class StockStore(Mapping):
@@ -12,7 +13,6 @@ class StockStore(Mapping):
         self.api = api
         self.settings = config
         self._stocks = {}
-        self.update_stocks()
 
     def __getitem__(self, key: str):
         return self._stocks[key]
@@ -23,10 +23,12 @@ class StockStore(Mapping):
     def __len__(self):
         return len(self._stocks)
 
-    def update_stocks(self):
+    async def update_stocks(self):
+        futures = tuple(
+            self.api.get_quote(ticket) for ticket in self.settings.all_tickets
+        )
         self._stocks = {
-            ticket: self.api.get_quote(ticket)
-            for ticket in self.settings.all_tickets
+            stock.ticket: stock for stock in await asyncio.gather(*futures)
         }
         if self.settings.currency:
             forex = self.api.get_forex_rates(self.settings.currency)

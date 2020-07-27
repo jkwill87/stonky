@@ -1,43 +1,70 @@
-import json
 from urllib.parse import urlencode
-from urllib.request import urlopen
+from aiohttp import ClientSession
 
+from stonky.exceptions import StonkyException
 from stonky.forex import Forex
 from stonky.stock import Stock
+from typing import Optional
 
 
 class Api:
-    def get_quote(self, ticket: str) -> Stock:
+    def __init__(self):
+        self._session: Optional[ClientSession] = None
+
+    async def __aenter__(self):
+        self._session = ClientSession()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        if self._session:
+            await self._session.close()
+            self._session = None
+
+    async def get_quote(self, ticket: str) -> Stock:
         url = f"https://query1.finance.yahoo.com/v11/finance/quoteSummary/{ticket}"
         params = {"modules": "summaryDetail,price"}
-        response = self._query(url, params)
-        summary_data = response["quoteSummary"]["result"][0]["summaryDetail"]
-        price_data = response["quoteSummary"]["result"][0]["price"]
-        return Stock(
-            ticket=ticket,
-            currency_code=price_data["currency"],
-            amount_bid=summary_data["bid"].get("raw", 0.0),
-            amount_ask=summary_data["ask"].get("raw", 0.0),
-            amount_low=summary_data["dayLow"].get("raw", 0.0),
-            amount_high=summary_data["dayHigh"].get("raw", 0.0),
-            amount_prev_close=summary_data["previousClose"].get("raw", 0.0),
-            delta_amount=price_data["regularMarketChange"].get("raw", 0.0),
-            delta_percent=price_data["regularMarketChangePercent"].get(
-                "raw", 0.0
-            ),
-            market_price=price_data["regularMarketPrice"].get("raw", 0.0),
-            volume=summary_data["volume"].get("raw", 0.0),
-        )
+        response = await self._query(url, params)
+        if "error" in response:
+            raise StonkyException(
+                f"Could not get stock information for {ticket}"
+            )
+        try:
+            summary_data = response["quoteSummary"]["result"][0][
+                "summaryDetail"
+            ]
+            price_data = response["quoteSummary"]["result"][0]["price"]
+            stock = Stock(
+                ticket=ticket,
+                currency_code=price_data["currency"],
+                amount_bid=summary_data["bid"].get("raw", 0.0),
+                amount_ask=summary_data["ask"].get("raw", 0.0),
+                amount_low=summary_data["dayLow"].get("raw", 0.0),
+                amount_high=summary_data["dayHigh"].get("raw", 0.0),
+                amount_prev_close=summary_data["previousClose"].get("raw", 0.0),
+                delta_amount=price_data["regularMarketChange"].get("raw", 0.0),
+                delta_percent=price_data["regularMarketChangePercent"].get(
+                    "raw", 0.0
+                ),
+                market_price=price_data["regularMarketPrice"].get("raw", 0.0),
+                volume=summary_data["volume"].get("raw", 0.0),
+            )
+        except TypeError:
+            raise StonkyException(
+                f"Could not parse stock information for {ticket}"
+            )
+        return stock
 
-    def get_forex_rates(self, base: str) -> Forex:
+    async def get_forex_rates(self, base: str) -> Forex:
         url = "https://api.exchangeratesapi.io/latest"
         params = {"base": base}
-        response = self._query(url, params)
+        response = await self._query(url, params)
         return Forex(**response["rates"])
 
-    @staticmethod
-    def _query(url: str, params: dict) -> dict:
+    async def _query(self, url: str, params: dict = None) -> dict:
         if params:
             url += "?" + urlencode(params)
-        response = urlopen(url)
-        return json.loads(response.read())
+        try:
+            async with self._session.get(url) as response:
+                return await response.json()
+        except ConnectionError:
+            raise StonkyException("Network Error")

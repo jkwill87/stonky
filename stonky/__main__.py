@@ -3,18 +3,20 @@ from stonky.const import IS_DEBUG
 from stonky.settings import Settings
 from stonky.stock_store import StockStore
 from stonky.tty import Tty, crash_report
+from asyncio import get_event_loop
 
 
-def main():
+async def main():
     try:
-        api = Api()
-        settings = Settings()
-        stock_store = StockStore(api, settings)
-        tty = Tty(settings, stock_store)
-        if settings.refresh:
-            tty.draw_live()
-        else:
-            tty.draw()
+        async with Api() as api:
+            settings = Settings()
+            stock_store = StockStore(api, settings)
+            await stock_store.update_stocks()
+            tty = Tty(settings, stock_store)
+            if settings.refresh:
+                await tty.draw_live()
+            else:
+                await tty.draw()
     except SystemExit:
         pass
     except:
@@ -25,4 +27,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    loop = get_event_loop()
+    loop.run_until_complete(main())

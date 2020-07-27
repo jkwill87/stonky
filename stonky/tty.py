@@ -43,8 +43,9 @@ class Tty:
             lines.append(f"{balance:,.2f} {currency}")
         return lines
 
-    def draw(self):
+    async def draw(self):
         lines = []
+        await self.stock_store.update_stocks()
         if self.settings.watchlist:
             lines += self.watchlist
 
@@ -55,18 +56,18 @@ class Tty:
             lines += self.profit_and_loss
             lines.append("")
             lines += self.balances_str
+        if self._draw_buffer:
+            erase_lines(self._draw_buffer)
         self._draw_buffer = len(lines)
         print("\n".join(lines))
 
-    def draw_live(self):
+    async def draw_live(self):
         remaining = 0
         try:
             while True:
                 if remaining == 0:
                     remaining = self.settings.refresh
-                    self.stock_store.update_stocks()
-                    erase_lines(self._draw_buffer)
-                    self.draw()
+                    await self.draw()
                     self._draw_buffer += 3
                 else:
                     erase_lines(3)

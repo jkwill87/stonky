@@ -1,18 +1,24 @@
+from unittest import IsolatedAsyncioTestCase
+
 from stonky.api import Api
 
 
-def test_get_quote__stock():
-    Api().get_quote("AAPL")
+class TestApi(IsolatedAsyncioTestCase):
+    async def asyncSetUp(self) -> None:
+        self.api = await Api().__aenter__()
 
+    async def asyncTearDown(self) -> None:
+        await self.api.__aexit__(None, None, None)
 
-def test_get_quote__cryptocurrency():
-    Api().get_quote("BTC-USD")
+    async def test_get_quote__stock(self):
+        await self.api.get_quote("AAPL")
 
+    async def test_get_quote__cryptocurrency(self):
+        await self.api.get_quote("BTC-USD")
 
-def test_get_quote__mutual_fund():
-    Api().get_quote("HBLFX")
+    async def test_get_quote__mutual_fund(self):
+        await self.api.get_quote("HBLFX")
 
-
-def test_get_forex_rates():
-    forex = Api().get_forex_rates("USD")
-    assert forex.USD == 1
+    async def test_get_forex_rates(self):
+        forex = await self.api.get_forex_rates("USD")
+        assert forex.USD == 1
