@@ -1,4 +1,4 @@
-from asyncio import sleep
+import asyncio
 from traceback import format_exc
 from typing import List
 
@@ -63,20 +63,17 @@ class Tty:
 
     async def draw_live(self):
         remaining = 0
-        try:
-            while True:
-                if remaining == 0:
-                    remaining = self.settings.refresh
-                    await self.draw()
-                    self._draw_buffer += 3
-                else:
-                    erase_lines(3)
-                    remaining -= 1
-                style_print(f"\nrefreshing in {remaining}", style="cyan")
-                style_print("press CTRL-C to quit", style="cyan")
-                await sleep(1)
-        except KeyboardInterrupt:
-            pass
+        while True:
+            if remaining == 0:
+                remaining = self.settings.refresh
+                await self.draw()
+                self._draw_buffer += 3
+            else:
+                erase_lines(3)
+                remaining -= 1
+            style_print(f"\nrefreshing in {remaining}", style="cyan")
+            style_print("press CTRL-C to quit", style="cyan")
+            await asyncio.sleep(1)
 
 
 def crash_report():
