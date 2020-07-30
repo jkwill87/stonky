@@ -1,3 +1,4 @@
+import asyncio
 from typing import Optional
 from urllib.parse import urlencode
 
@@ -56,10 +57,24 @@ class Api:
         return stock
 
     async def get_forex_rates(self, base: str) -> Forex:
-        url = "https://api.exchangeratesapi.io/latest"
-        params = {"base": base}
-        response = await self._query(url, params)
-        return Forex(**response["rates"])
+        forex = Forex()
+        futures = [
+            self._set_forex_rate(base, currency, forex)
+            for currency in forex.keys()
+            if currency != base
+        ]
+        await asyncio.gather(*futures)
+        return forex
+
+    async def _set_forex_rate(self, base: str, currency: str, forex: Forex):
+        url = f"https://query1.finance.yahoo.com/v7/finance/spark?symbols={base}{currency}=X&range=1m"
+        response = await self._query(url)
+        if "error" in response:
+            raise StonkyException(f"Cannot covert {currency} to {base}")
+        rate = response["spark"]["result"][0]["response"][0]["meta"][
+            "regularMarketPrice"
+        ]
+        setattr(forex, currency, rate)
 
     async def _query(self, url: str, params: dict = None) -> dict:
         if params:
@@ -69,3 +84,5 @@ class Api:
                 return await response.json()
         except ConnectionError:
             raise StonkyException("Network Error")
+        except ValueError:
+            raise StonkyException("Could decode server response")
