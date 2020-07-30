@@ -2,7 +2,7 @@ from argparse import ArgumentParser, RawTextHelpFormatter
 from configparser import ConfigParser
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional, get_type_hints
+from typing import Dict, List, Optional
 
 from pkg_resources import resource_filename
 
@@ -39,7 +39,7 @@ class Settings:
         parser.add_argument(
             "--currency",
             metavar="CODE",
-            choices=get_type_hints(Forex).keys(),
+            choices=Forex.keys(),
             help="converts all amounts using current forex rates",
         )
         parser.add_argument(
