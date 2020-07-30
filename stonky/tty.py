@@ -1,4 +1,4 @@
-from time import sleep
+from asyncio import sleep
 from traceback import format_exc
 from typing import List
 
@@ -74,7 +74,7 @@ class Tty:
                     remaining -= 1
                 style_print(f"\nrefreshing in {remaining}", style="cyan")
                 style_print("press CTRL-C to quit", style="cyan")
-                sleep(1)
+                await sleep(1)
         except KeyboardInterrupt:
             pass
 
