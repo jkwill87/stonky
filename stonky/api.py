@@ -1,11 +1,11 @@
 import asyncio
-from typing import Optional
+from typing import Dict, Optional, Set
 from urllib.parse import urlencode
 
 from aiohttp import ClientSession
 
+from stonky.enums import CurrencyType
 from stonky.exceptions import StonkyException
-from stonky.forex import Forex
 from stonky.stock import Stock
 
 
@@ -37,7 +37,7 @@ class Api:
             price_data = response["quoteSummary"]["result"][0]["price"]
             stock = Stock(
                 ticket=ticket,
-                currency_code=price_data["currency"],
+                currency=CurrencyType(price_data["currency"]),
                 amount_bid=summary_data["bid"].get("raw", 0.0),
                 amount_ask=summary_data["ask"].get("raw", 0.0),
                 amount_low=summary_data["dayLow"].get("raw", 0.0),
@@ -52,29 +52,44 @@ class Api:
             )
         except TypeError:
             raise StonkyException(
-                f"Could not parse stock information for {ticket}"
+                f"Could not get stock information for '{ticket}'"
             )
         return stock
 
-    async def get_forex_rates(self, base: str) -> Forex:
-        forex = Forex()
+    async def get_forex_rates(
+        self,
+        base_currency: CurrencyType,
+        currency_filter: Set[CurrencyType] = None,
+    ):
+        forex = {base_currency: 1.0}
         futures = [
-            self._set_forex_rate(base, currency, forex)
-            for currency in forex.keys()
-            if currency != base
+            self._set_forex_rate(base_currency, conversion_currency, forex)
+            for conversion_currency in (currency_filter or set(CurrencyType))
+            if conversion_currency != base_currency
         ]
         await asyncio.gather(*futures)
         return forex
 
-    async def _set_forex_rate(self, base: str, currency: str, forex: Forex):
-        url = f"https://query1.finance.yahoo.com/v7/finance/spark?symbols={base}{currency}=X&range=1m"
-        response = await self._query(url)
+    async def _set_forex_rate(
+        self,
+        base_currency: CurrencyType,
+        conversion_currency: CurrencyType,
+        forex: Dict[CurrencyType, float],
+    ):
+        url = "https://query1.finance.yahoo.com/v7/finance/spark"
+        params = {
+            "symbols": f"{conversion_currency.value}{base_currency.value}=X",
+            "range": "1m",
+        }
+        response = await self._query(url, params)
         if "error" in response:
-            raise StonkyException(f"Cannot covert {currency} to {base}")
+            raise StonkyException(
+                f"Cannot covert {base_currency.value} to {conversion_currency.value}"
+            )
         rate = response["spark"]["result"][0]["response"][0]["meta"][
             "regularMarketPrice"
         ]
-        setattr(forex, currency, rate)
+        forex[conversion_currency] = rate
 
     async def _query(self, url: str, params: dict = None) -> dict:
         if params:

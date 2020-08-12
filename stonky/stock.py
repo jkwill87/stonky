@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 from decimal import Decimal
 
-from stonky.forex import Forex
+from stonky.enums import CurrencyType
 
 
 @dataclass
 class Stock:
     ticket: str = ""
-    currency_code: str = "USD"
+    currency: CurrencyType = CurrencyType.USD
     amount_bid: float = 0.0
     amount_ask: float = 0.0
     amount_low: float = 0.0
@@ -20,7 +20,6 @@ class Stock:
 
     def __post_init__(self):
         self.ticket = self.ticket.upper()
-        self.currency_code = self.currency_code.upper()
 
     def __str__(self):
         return self.ticker_tape
@@ -95,16 +94,4 @@ class Stock:
 
     @property
     def profit_and_loss(self) -> str:
-        return f"{self.delta_percent*100:+.2f}% {self.delta_amount:+,.2f} {self.currency_code}"
-
-    def convert_currency(self, forex: Forex, currency_code: str):
-        if self.currency_code == currency_code:
-            return self
-        rate = 1.0 / getattr(forex, self.currency_code)
-        self.currency_code = currency_code
-        self.amount_bid *= rate
-        self.amount_ask *= rate
-        self.amount_low *= rate
-        self.amount_high *= rate
-        self.amount_prev_close *= rate
-        self.market_price *= rate
+        return f"{self.delta_percent*100:+.2f}% {self.delta_amount:+,.2f} {self.currency.value}"

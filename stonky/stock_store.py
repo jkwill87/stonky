@@ -1,5 +1,4 @@
 import asyncio
-from collections.abc import Mapping
 from copy import copy
 from typing import List
 
@@ -8,66 +7,55 @@ from stonky.settings import Settings
 from stonky.stock import Stock
 
 
-class StockStore(Mapping):
-    def __init__(self, api: Api, config: Settings):
-        self.api = api
-        self.settings = config
+class StockStore:
+    def __init__(self, api: Api, settings: Settings):
         self._stocks = {}
+        self._api = api
+        self._sort = settings.sort
+        self._base_currency = settings.currency
+        self._settings = settings
+        self._raw_cash = None
+        self._raw_positions = None
+        self._raw_watchlist = None
+        self._raw_tickets = None
 
-    def __getitem__(self, key: str):
-        return self._stocks[key]
-
-    def __iter__(self):
-        return iter(self._stocks)
-
-    def __len__(self):
-        return len(self._stocks)
-
-    async def update_stocks(self):
-        futures = tuple(
-            self.api.get_quote(ticket) for ticket in self.settings.all_tickets
-        )
-        self._stocks = {
-            stock.ticket: stock for stock in await asyncio.gather(*futures)
-        }
-        if self.settings.currency:
-            forex = await self.api.get_forex_rates(self.settings.currency)
-            for stock in self._stocks.values():
-                stock.convert_currency(forex, self.settings.currency)
+    async def update(self):
+        self._reset_raw_values()
+        await self._update_quotes()
+        if self._base_currency:
+            await self._convert_currencies()
 
     @property
     def watchlist(self) -> List[Stock]:
         return self._try_sort(
             [
                 stock
-                for ticket, stock in self.items()
-                if ticket in self.settings.watchlist
+                for ticket, stock in self._stocks.items()
+                if ticket in self._raw_watchlist
             ]
         )
 
     @property
     def positions(self) -> List[Stock]:
         results = []
-        for ticket, amount in self.settings.positions.items():
-            stock = copy(self[ticket])
-            stock.delta_amount *= amount
+        for ticket, count in self._raw_positions.items():
+            stock = copy(self._stocks[ticket])
+            stock.delta_amount *= count
             results.append(stock)
         return self._try_sort(results)
 
     @property
     def profit_and_loss(self):
         pnl = {}
-        for ticket, amount in self.settings.positions.items():
-            stock = copy(self[ticket])
-            stock.delta_amount *= amount
-            stock.amount_prev_close *= amount
-            if stock.currency_code not in pnl:
-                pnl[stock.currency_code] = stock
+        for ticket, count in self._raw_positions.items():
+            stock = copy(self._stocks[ticket])
+            stock.delta_amount *= count
+            stock.amount_prev_close *= count
+            if stock.currency not in pnl:
+                pnl[stock.currency] = stock
             else:
-                pnl[
-                    stock.currency_code
-                ].amount_prev_close += stock.amount_prev_close
-                pnl[stock.currency_code].delta_amount += stock.delta_amount
+                pnl[stock.currency].amount_prev_close += stock.amount_prev_close
+                pnl[stock.currency].delta_amount += stock.delta_amount
         results = []
         for pnl_line in pnl.values():
             pnl_line.delta_percent = (
@@ -79,23 +67,68 @@ class StockStore(Mapping):
     @property
     def balances(self):
         balances = {}
-        for ticket, amount in self.settings.positions.items():
-            stock = self[ticket]
-            if stock.currency_code not in balances:
-                balances[stock.currency_code] = stock.amount_current * amount
+        for ticket, count in self._raw_positions.items():
+            stock = self._stocks[ticket]
+            if stock.currency not in balances:
+                balances[stock.currency] = stock.amount_current * count
             else:
-                balances[stock.currency_code] += stock.amount_current * amount
-        for currency_code, amount in self.settings.cash.items():
-            currency_code = self.settings.currency or currency_code
-            if currency_code not in balances:
-                balances[currency_code] = amount
+                balances[stock.currency] += stock.amount_current * count
+        for currency, amount in self._raw_cash.items():
+            if currency not in balances:
+                balances[currency] = amount
             else:
-                balances[currency_code] += amount
+                balances[currency] += amount
         return balances
 
     def _try_sort(self, stocks: List[Stock]):
-        if self.settings.sort:
-            reverse = self.settings.sort.value.endswith("_desc")
-            sort, *_ = self.settings.sort.value.rsplit("_desc")
+        if self._sort:
+            reverse = self._sort.value.endswith("_desc")
+            sort, *_ = self._sort.value.rsplit("_desc")
             stocks.sort(key=lambda _: getattr(_, sort), reverse=reverse)
         return stocks
+
+    def _reset_raw_values(self):
+        self._raw_cash = copy(self._settings.cash)
+        self._raw_positions = copy(self._settings.positions)
+        self._raw_watchlist = copy(self._settings.watchlist)
+        self._raw_tickets = set(self._settings.positions) | set(
+            self._settings.watchlist
+        )
+
+    async def _update_quotes(self):
+        futures = tuple(
+            self._api.get_quote(ticket) for ticket in self._raw_tickets
+        )
+        self._stocks = {
+            stock.ticket: stock for stock in await asyncio.gather(*futures)
+        }
+
+    async def _convert_currencies(self):
+        used_currencies = set(self._raw_cash) | {
+            stock.currency for stock in self.positions
+        }
+        forex = await self._api.get_forex_rates(
+            self._base_currency, used_currencies
+        )
+        # convert balances
+        base_amount = self._raw_cash.get(self._base_currency, 0.0)
+        self._raw_cash = {
+            self._base_currency: base_amount
+            + sum(
+                self._raw_cash[conversion_currency] / forex[conversion_currency]
+                for conversion_currency in self._raw_cash
+            )
+        }
+        # convert stocks
+        for stock in self._stocks.values():
+            if stock.currency is self._base_currency:
+                continue
+            conversion_rate = forex[stock.currency]
+            stock.currency = self._base_currency
+            stock.amount_bid *= conversion_rate
+            stock.amount_ask *= conversion_rate
+            stock.amount_low *= conversion_rate
+            stock.amount_high *= conversion_rate
+            stock.amount_prev_close *= conversion_rate
+            stock.delta_amount *= conversion_rate
+            stock.market_price *= conversion_rate

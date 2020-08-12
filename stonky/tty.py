@@ -40,12 +40,12 @@ class Tty:
     def balances_str(self) -> List[str]:
         lines = [style_format("BALANCES", style="bold")]
         for currency, balance in self.stock_store.balances.items():
-            lines.append(f"{balance:,.2f} {currency}")
+            lines.append(f"{balance:,.2f} {currency.value}")
         return lines
 
     async def draw(self):
         lines = []
-        await self.stock_store.update_stocks()
+        await self.stock_store.update()
         if self.settings.watchlist:
             lines += self.watchlist
 

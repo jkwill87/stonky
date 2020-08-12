@@ -7,8 +7,8 @@ from typing import Dict, List, Optional
 from pkg_resources import resource_filename
 
 from stonky.const import EPILOG
-from stonky.forex import Forex
-from stonky.types import SortType
+from stonky.enums import CurrencyType, SortType
+from stonky.exceptions import StonkyException
 
 
 @dataclass
@@ -16,14 +16,10 @@ class Settings:
     positions: Dict[str, float] = field(default_factory=dict)
     watchlist: List[str] = field(default_factory=list)
     config_path: Path = Path.home() / ".stonky.cfg"
-    cash: Dict[str, float] = field(default_factory=dict)
+    cash: Dict[CurrencyType, float] = field(default_factory=dict)
     refresh: Optional[float] = None
     sort: Optional[SortType] = SortType.CHANGE
-    currency: Optional[str] = None
-
-    @property
-    def all_tickets(self):
-        return set(self.positions.keys()) | set(self.watchlist)
+    currency: Optional[CurrencyType] = None
 
     def __post_init__(self):
         self._get_args()
@@ -39,7 +35,8 @@ class Settings:
         parser.add_argument(
             "--currency",
             metavar="CODE",
-            choices=Forex.keys(),
+            choices=CurrencyType.arg_choices(),
+            type=str.upper,
             help="converts all amounts using current forex rates",
         )
         parser.add_argument(
@@ -51,6 +48,7 @@ class Settings:
         parser.add_argument(
             "--sort",
             metavar="FIELD",
+            type=str.lower,
             choices=SortType.arg_choices(),
             help="orders stocks by field",
         )
@@ -58,7 +56,7 @@ class Settings:
         if args.config:
             self.config_path = Path(args.config)
         if args.currency:
-            self.currency = args.currency
+            self.currency = CurrencyType(args.currency)
         if args.refresh:
             self.refresh = args.refresh
         if args.sort:
@@ -81,10 +79,20 @@ class Settings:
             tickets = [line[0].upper() for line in parser.items("watchlist")]
             self.watchlist += tickets
         if "cash" in parser:
-            for currency_code, amount in parser.items("cash"):
+            for currency, amount in parser.items("cash"):
+                try:
+                    currency = CurrencyType(currency.upper())
+                except ValueError:
+                    raise StonkyException(
+                        f"{currency} is an invalid currency code"
+                    )
                 amount = float(amount.replace(",", ""))
-                self.cash[currency_code.upper()] = amount
+                self.cash[currency] = amount
         if parser.get("preferences", "refresh", fallback=None):
             self.refresh = float(parser.get("preferences", "refresh"))
         if parser.get("preferences", "currency", fallback=None):
-            self.currency = parser.get("preferences", "currency").upper()
+            currency = parser.get("preferences", "currency").upper()
+            try:
+                self.currency = CurrencyType(currency)
+            except ValueError:
+                raise StonkyException(f"{currency} is an invalid currency code")

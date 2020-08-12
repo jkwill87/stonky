@@ -5,9 +5,8 @@ from stonky.stock import Stock
 
 class TestStock(TestCase):
     def test_post_init(self):
-        stock = Stock(ticket="amd", currency_code="usd")
+        stock = Stock(ticket="amd")
         assert stock.ticket == "AMD"
-        assert stock.currency_code == "USD"
 
     def test_volume_str__hundreds__lower(self):
         stock = Stock(volume=0)

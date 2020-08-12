@@ -6,7 +6,7 @@ from textwrap import fill
 from teletype import VERSION as teletype_version
 
 from stonky.__version__ import VERSION
-from stonky.types import SortType
+from stonky.enums import SortType
 
 IS_DEBUG = gettrace() is not None
 SYSTEM = {

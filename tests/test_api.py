@@ -1,6 +1,7 @@
 from unittest import IsolatedAsyncioTestCase
 
 from stonky.api import Api
+from stonky.enums import CurrencyType
 
 
 class TestApi(IsolatedAsyncioTestCase):
@@ -20,5 +21,5 @@ class TestApi(IsolatedAsyncioTestCase):
         await self.api.get_quote("HBLFX")
 
     async def test_get_forex_rates(self):
-        forex = await self.api.get_forex_rates("USD")
-        assert forex.USD == 1
+        forex = await self.api.get_forex_rates(CurrencyType.USD)
+        assert forex[CurrencyType.USD] == 1

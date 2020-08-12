@@ -11,6 +11,8 @@ def entrypoint():
     loop = asyncio.get_event_loop()
     try:
         loop.run_until_complete(main())
+    except SystemExit:
+        raise
     except KeyboardInterrupt:
         pass
     except:
