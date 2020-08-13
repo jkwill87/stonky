@@ -18,6 +18,8 @@ class TestApi(IsolatedAsyncioTestCase):
     async def asyncTearDown(self) -> None:
         await self.api.__aexit__(None, None, None)
 
+
+class TestGetQuote(TestApi):
     async def test_get_quote__stock(self):
         self.api._query = AsyncMock(return_value=AAPL_RESPONSE)
         stock = await self.api.get_quote("AAPL")
@@ -73,13 +75,7 @@ class TestApi(IsolatedAsyncioTestCase):
         assert forex[CurrencyType.CAD] == 0.7555
 
 
-class TestProvider(IsolatedAsyncioTestCase):
-    async def asyncSetUp(self) -> None:
-        self.api = await Api().__aenter__()
-
-    async def asyncTearDown(self) -> None:
-        await self.api.__aexit__(None, None, None)
-
+class TestProviders(TestApi):
     async def test_quote(self):
         await self.api.get_quote("AAPL")
 
