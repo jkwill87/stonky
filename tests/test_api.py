@@ -71,3 +71,17 @@ class TestApi(IsolatedAsyncioTestCase):
         self.api._query.assert_called_once()
         assert forex[CurrencyType.USD] == 1.0
         assert forex[CurrencyType.CAD] == 0.7555
+
+
+class TestProvider(IsolatedAsyncioTestCase):
+    async def asyncSetUp(self) -> None:
+        self.api = await Api().__aenter__()
+
+    async def asyncTearDown(self) -> None:
+        await self.api.__aexit__(None, None, None)
+
+    async def test_quote(self):
+        await self.api.get_quote("AAPL")
+
+    async def test_forex(self):
+        await self.api.get_forex_rates(CurrencyType.USD, {CurrencyType.CAD})
