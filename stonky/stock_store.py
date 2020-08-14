@@ -40,7 +40,7 @@ class StockStore:
         results = []
         for ticket, count in self._raw_positions.items():
             stock = copy(self._stocks[ticket])
-            stock.delta_amount *= count
+            stock.increase_count(count)
             results.append(stock)
         return self._try_sort(results)
 
@@ -49,8 +49,7 @@ class StockStore:
         pnl = {}
         for ticket, count in self._raw_positions.items():
             stock = copy(self._stocks[ticket])
-            stock.delta_amount *= count
-            stock.amount_prev_close *= count
+            stock.increase_count(count)
             if stock.currency not in pnl:
                 pnl[stock.currency] = stock
             else:
@@ -125,10 +124,4 @@ class StockStore:
                 continue
             conversion_rate = forex[stock.currency]
             stock.currency = self._base_currency
-            stock.amount_bid *= conversion_rate
-            stock.amount_ask *= conversion_rate
-            stock.amount_low *= conversion_rate
-            stock.amount_high *= conversion_rate
-            stock.amount_prev_close *= conversion_rate
-            stock.delta_amount *= conversion_rate
-            stock.market_price *= conversion_rate
+            stock.convert_currency(conversion_rate)

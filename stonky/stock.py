@@ -95,3 +95,16 @@ class Stock:
     @property
     def profit_and_loss(self) -> str:
         return f"{self.delta_percent*100:+.2f}% {self.delta_amount:+,.2f} {self.currency.value}"
+
+    def increase_count(self, count: float):
+        self.delta_amount *= count
+        self.amount_prev_close *= count
+
+    def convert_currency(self, conversion_rate: float):
+        self.amount_bid *= conversion_rate
+        self.amount_ask *= conversion_rate
+        self.amount_low *= conversion_rate
+        self.amount_high *= conversion_rate
+        self.amount_prev_close *= conversion_rate
+        self.delta_amount *= conversion_rate
+        self.market_price *= conversion_rate
