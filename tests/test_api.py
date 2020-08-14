@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock
 
 from stonky.api import Api
 from stonky.enums import CurrencyType
-from tests.fixtures import (
+from tests import (
     AAPL_RESPONSE,
     BTC_RESPONSE,
     CAD_USD_REPONSE,
