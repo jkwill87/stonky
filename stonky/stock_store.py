@@ -61,7 +61,7 @@ class StockStore:
                 pnl_line.delta_amount / pnl_line.amount_prev_close
             )
             results.append(pnl_line)
-        return self._try_sort(results)
+        return results
 
     @property
     def balances(self):
