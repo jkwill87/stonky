@@ -1,4 +1,3 @@
-from copy import copy
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock
 
@@ -161,3 +160,65 @@ class TestWatchlist(TestStockStore):
             "SHOP.TO",
             "VGRO.TO",
         ]
+
+
+class TestPositions(TestStockStore):
+    @property
+    def position_tickets(self):
+        return [stock.ticket for stock in self.stock_store.positions]
+
+    async def test_sort_amount(self):
+        self.settings.sort = SortType.AMOUNT
+        assert self.position_tickets == ["VGRO.TO", "AAPL", "AMD", "SHOP.TO"]
+
+    async def test_sort_amount_desc(self):
+        self.settings.sort = SortType.AMOUNT_DESC
+        assert self.position_tickets == ["SHOP.TO", "AMD", "AAPL", "VGRO.TO"]
+
+    async def test_sort_ticket(self):
+        self.settings.sort = SortType.TICKET
+        assert self.position_tickets == ["AAPL", "AMD", "SHOP.TO", "VGRO.TO"]
+
+    async def test_sort_ticket_desc(self):
+        self.settings.sort = SortType.TICKET_DESC
+        assert self.position_tickets == ["VGRO.TO", "SHOP.TO", "AMD", "AAPL"]
+
+    async def test_sort_low(self):
+        self.settings.sort = SortType.LOW
+        assert self.position_tickets == ["VGRO.TO", "AAPL", "AMD", "SHOP.TO"]
+
+    async def test_sort_low_desc(self):
+        self.settings.sort = SortType.LOW_DESC
+        assert self.position_tickets == ["SHOP.TO", "AMD", "AAPL", "VGRO.TO"]
+
+    async def test_sort_high(self):
+        self.settings.sort = SortType.HIGH
+        assert self.position_tickets == ["VGRO.TO", "AAPL", "AMD", "SHOP.TO"]
+
+    async def test_sort_high_desc(self):
+        self.settings.sort = SortType.HIGH_DESC
+        assert self.position_tickets == ["SHOP.TO", "AMD", "AAPL", "VGRO.TO"]
+
+    async def test_sort_close(self):
+        self.settings.sort = SortType.CLOSE
+        assert self.position_tickets == ["AAPL", "AMD", "VGRO.TO", "SHOP.TO"]
+
+    async def test_sort_close_desc(self):
+        self.settings.sort = SortType.CLOSE_DESC
+        assert self.position_tickets == ["SHOP.TO", "VGRO.TO", "AMD", "AAPL"]
+
+    async def test_sort_change(self):
+        self.settings.sort = SortType.CHANGE
+        assert self.position_tickets == ["AAPL", "VGRO.TO", "SHOP.TO", "AMD"]
+
+    async def test_sort_change_desc(self):
+        self.settings.sort = SortType.CHANGE_DESC
+        assert self.position_tickets == ["AMD", "SHOP.TO", "VGRO.TO", "AAPL"]
+
+    async def test_sort_volume(self):
+        self.settings.sort = SortType.VOLUME
+        assert self.position_tickets == ["VGRO.TO", "SHOP.TO", "AMD", "AAPL"]
+
+    async def test_sort_volume_desc(self):
+        self.settings.sort = SortType.VOLUME_DESC
+        assert self.position_tickets == ["AAPL", "AMD", "SHOP.TO", "VGRO.TO"]
