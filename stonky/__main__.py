@@ -24,7 +24,7 @@ def entrypoint():
 
 async def main():
     async with Api() as api:
-        settings = Settings()
+        settings = Settings.load()
         stock_store = StockStore(api, settings)
         tty = Tty(settings, stock_store)
         if settings.refresh:

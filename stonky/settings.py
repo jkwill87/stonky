@@ -21,9 +21,12 @@ class Settings:
     sort: Optional[SortType] = SortType.CHANGE
     currency: Optional[CurrencyType] = None
 
-    def __post_init__(self):
-        self._get_args()
-        self._get_config()
+    @classmethod
+    def load(cls, **kwargs):
+        settings = cls(**kwargs)
+        settings._get_args()
+        settings._get_config()
+        return settings
 
     def _get_args(self):
         parser = ArgumentParser(
