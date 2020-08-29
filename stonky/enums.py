@@ -66,3 +66,9 @@ class SortType(Enum):
     @classmethod
     def arg_choices(cls) -> Tuple[str]:
         return *tuple(member.lower() for member in cls.__members__), ""
+
+
+class VerboseType(Enum):
+    STANDARD = 0
+    EXTENDED = 1
+    DEBUG = 2

@@ -7,7 +7,7 @@ from typing import Dict, List, Optional
 from pkg_resources import resource_filename
 
 from stonky.const import EPILOG
-from stonky.enums import CurrencyType, SortType
+from stonky.enums import CurrencyType, SortType, VerboseType
 from stonky.exceptions import StonkyException
 
 
@@ -20,6 +20,7 @@ class Settings:
     refresh: Optional[float] = None
     sort: Optional[SortType] = SortType.CHANGE
     currency: Optional[CurrencyType] = None
+    verbose: VerboseType = VerboseType.STANDARD
 
     @classmethod
     def load(cls, **kwargs):
@@ -56,23 +57,34 @@ class Settings:
             choices=SortType.arg_choices(),
             help="orders stocks by field",
         )
+        parser.add_argument(
+            "-v",
+            "--verbose",
+            action="count",
+            help="prints out current settings",
+        )
         self._args = parser.parse_args()
         if self._args.config:
             self.config_path = Path(self._args.config)
 
     def _apply_parsed_args(self):
-        if self._args.currency == '':
+        if self._args.currency == "":
             self.currency = None
         elif self._args.currency:
             self.currency = CurrencyType(self._args.currency)
-        if self._args.refresh in ('', 0):
+        if self._args.refresh in ("", 0):
             self.refresh = None
         elif self._args.refresh:
             self.refresh = self._args.refresh
-        if self._args.sort == '':
+        if self._args.sort == "":
             self._args.sort = None
         elif self._args.sort is not None:
             self.sort = SortType.from_arg(self._args.sort)
+        if self._args.verbose is not None:
+            if self._args.verbose == 1:
+                self.verbose = VerboseType.EXTENDED
+            else:
+                self.verbose = VerboseType.DEBUG
 
     def _get_config(self):
         parser = ConfigParser(

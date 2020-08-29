@@ -7,6 +7,8 @@ from teletype.io import erase_lines, style_format, style_print
 from stonky.const import SYSTEM
 from stonky.settings import Settings
 from stonky.stock_store import StockStore
+from stonky.enums import VerboseType
+from dataclasses import fields
 
 
 class Tty:
@@ -14,6 +16,24 @@ class Tty:
         self.settings = settings
         self.stock_store = stock_store
         self._draw_buffer = 0
+
+    @property
+    def debug_system(self) -> List[str]:
+        lines = [
+            style_format("SYSTEM", style="bold"),
+        ]
+        for k, v in SYSTEM.items():
+            lines.append(f"{k.title()} = {v}")
+        return lines
+
+    @property
+    def debug_settings(self) -> List[str]:
+        lines = [style_format("SETTINGS", style="bold")]
+        for field in fields(self.settings):
+            key = field.name
+            value = getattr(self.settings, key)
+            lines.append(f"{key} = {value}")
+        return lines
 
     @property
     def watchlist(self) -> List[str]:
@@ -45,6 +65,11 @@ class Tty:
 
     async def draw(self):
         lines = []
+        if self.settings.verbose is VerboseType.DEBUG:
+            lines += self.debug_system
+            lines.append("")
+            lines += self.debug_settings
+            lines.append("")
         await self.stock_store.update()
         if self.settings.watchlist:
             lines += self.watchlist
