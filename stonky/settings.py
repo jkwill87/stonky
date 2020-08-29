@@ -26,6 +26,7 @@ class Settings:
         settings = cls(**kwargs)
         settings._get_args()
         settings._get_config()
+        settings._apply_parsed_args()
         return settings
 
     def _get_args(self):
@@ -55,15 +56,23 @@ class Settings:
             choices=SortType.arg_choices(),
             help="orders stocks by field",
         )
-        args = parser.parse_args()
-        if args.config:
-            self.config_path = Path(args.config)
-        if args.currency:
-            self.currency = CurrencyType(args.currency)
-        if args.refresh:
-            self.refresh = args.refresh
-        if args.sort:
-            self.sort = SortType.from_arg(args.sort)
+        self._args = parser.parse_args()
+        if self._args.config:
+            self.config_path = Path(self._args.config)
+
+    def _apply_parsed_args(self):
+        if self._args.currency == '':
+            self.currency = None
+        elif self._args.currency:
+            self.currency = CurrencyType(self._args.currency)
+        if self._args.refresh in ('', 0):
+            self.refresh = None
+        elif self._args.refresh:
+            self.refresh = self._args.refresh
+        if self._args.sort == '':
+            self._args.sort = None
+        elif self._args.sort is not None:
+            self.sort = SortType.from_arg(self._args.sort)
 
     def _get_config(self):
         parser = ConfigParser(

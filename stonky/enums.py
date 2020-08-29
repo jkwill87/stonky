@@ -40,7 +40,7 @@ class CurrencyType(Enum):
 
     @classmethod
     def arg_choices(cls) -> Tuple[str]:
-        return tuple(str(choice.value) for choice in cls)
+        return *tuple(str(choice.value) for choice in cls), ""
 
 
 class SortType(Enum):
@@ -65,4 +65,4 @@ class SortType(Enum):
 
     @classmethod
     def arg_choices(cls) -> Tuple[str]:
-        return tuple(member.lower() for member in cls.__members__)
+        return *tuple(member.lower() for member in cls.__members__), ""
