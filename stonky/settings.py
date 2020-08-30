@@ -61,7 +61,7 @@ class Settings:
             "-v",
             "--verbose",
             action="count",
-            help="prints out current settings",
+            help="-v: prints extended ticker info; -vv: prints debug info",
         )
         self._args = parser.parse_args()
         if self._args.config:
