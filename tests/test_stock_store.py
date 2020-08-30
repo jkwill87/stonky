@@ -13,7 +13,12 @@ class TestStockStore(TestCase):
         self.api = Api()
         self.api._query = Mock()
         self.settings = Settings(
-            positions={"AAPL": 1, "AMD": 10, "SHOP.TO": 100, "VGRO.TO": 1000,},
+            positions={
+                "AAPL": 1,
+                "AMD": 10,
+                "SHOP.TO": 100,
+                "VGRO.TO": 1000,
+            },
             watchlist=["AAPL", "AMD", "SHOP.TO", "VGRO.TO"],
         )
 
