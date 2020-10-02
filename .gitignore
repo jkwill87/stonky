@@ -6,9 +6,11 @@
 *.py[cod]
 .DS_Store
 .coverage
+.exrc
 .idea
 .pytest_cache/
 .python-version
+.vs
 .vscode
 MANIFEST
 __pycache__/
