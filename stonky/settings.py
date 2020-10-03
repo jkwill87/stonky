@@ -61,15 +61,15 @@ class Settings:
             self.config_path = Path(self._args.config)
 
     def _apply_parsed_args(self):
-        if self._args.currency == '':
+        if self._args.currency == "":
             self.currency = None
         elif self._args.currency:
             self.currency = CurrencyType(self._args.currency)
-        if self._args.refresh in ('', 0):
+        if self._args.refresh in ("", 0):
             self.refresh = None
         elif self._args.refresh:
             self.refresh = self._args.refresh
-        if self._args.sort == '':
+        if self._args.sort == "":
             self._args.sort = None
         elif self._args.sort is not None:
             self.sort = SortType.from_arg(self._args.sort)
