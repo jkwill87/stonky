@@ -13,7 +13,7 @@ clean-venv:
 	@deactivate 2> /dev/null || true
 	@rm -rf venv
 
-clean: clean-build clean-demo clean-venv
+clean: clean-build clean-venv
 
 
 # Deployment Helpers -----------------------------------------------------------
