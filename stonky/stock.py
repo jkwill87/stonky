@@ -25,7 +25,7 @@ class Stock:
         return self.ticker_tape
 
     @property
-    def amount_current(self):
+    def amount_current(self) -> float:
         if self.amount_bid:
             return self.amount_bid
         elif self.market_price:
@@ -57,44 +57,13 @@ class Stock:
         return s
 
     @property
-    def colour(self):
+    def colour(self) -> str:
         if self.delta_amount < 0:
             return "red"
         elif self.delta_amount == 0:
             return "yellow"
         else:
             return "green"
-
-    @property
-    def ticker_tape(self) -> str:
-        if self.delta_amount < 0:
-            symbol = "▼"
-        elif self.delta_amount == 0:
-            symbol = "▬"
-        else:
-            symbol = "▲"
-        s = self.ticket.ljust(8)
-        if self.volume:
-            s += self.volume_str.ljust(8) + "@ "
-        else:
-            s += " " * 8
-        s += f"{self.amount_current:.2f}".ljust(8)
-        s += symbol
-        s += f"{self.delta_amount:+,.2f} {self.delta_percent*100:+.2f}%".rjust(
-            15
-        )
-        return s
-
-    @property
-    def position(self) -> str:
-        s = self.ticket.ljust(8)
-        s += f"{self.delta_amount:+,.2f}".ljust(8)
-        s += f"{self.delta_percent*100:+.2f}%"
-        return s
-
-    @property
-    def profit_and_loss(self) -> str:
-        return f"{self.delta_percent*100:+.2f}% {self.delta_amount:+,.2f} {self.currency.value}"
 
     def increase_count(self, count: float):
         self.delta_amount *= count

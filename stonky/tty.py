@@ -1,12 +1,31 @@
 import asyncio
 from traceback import format_exc
-from typing import List
+from typing import Any, List
 
 from teletype.io import erase_lines, style_format, style_print
 
 from stonky.const import SYSTEM
 from stonky.settings import Settings
 from stonky.stock_store import StockStore
+
+
+def format_table(rows: List[List[str]], colours: List[str]):
+    column_widths = [
+        len(max(columns, key=len))
+        for columns in [list(column) for column in zip(*rows)]
+    ]
+    return [
+        style_format(
+            " ".join(
+                [
+                    col.ljust(column_widths[idx_col] + 1)
+                    for idx_col, col in enumerate(row)
+                ]
+            ),
+            colours[idx],
+        )
+        for idx, row in enumerate(rows)
+    ]
 
 
 class Tty:
@@ -17,23 +36,57 @@ class Tty:
 
     @property
     def watchlist(self) -> List[str]:
-        lines = [style_format("WATCHLIST", style="bold")]
+        rows = []
+        colours = []
         for stock in self.stock_store.watchlist:
-            lines.append(style_format(stock.ticker_tape, stock.colour))
-        return lines
+            row = []
+            row.append(stock.ticket)
+            if stock.volume:
+                row.append(stock.volume_str)
+            else:
+                row.append("")
+            row.append(f"@ {stock.amount_current:.2f}")
+            if stock.delta_amount < 0:
+                symbol = "▼"
+            elif stock.delta_amount == 0:
+                symbol = "▬"
+            else:
+                symbol = "▲"
+            row.append(symbol)
+            row.append(f"{stock.delta_amount:+,.2f}")
+            row.append(f"{stock.delta_percent*2:+.2f}%")
+            rows.append(row)
+            colours.append(stock.colour)
+        return [style_format("WATCHLIST", style="bold")] + format_table(
+            rows, colours
+        )
 
     @property
     def positions(self) -> List[str]:
-        lines = [style_format("POSITIONS", style="bold")]
+        rows = []
+        colours = []
         for stock in self.stock_store.positions:
-            lines.append(style_format(stock.position, stock.colour))
-        return lines
+            row = [
+                stock.ticket,
+                f"{stock.delta_amount:+,.2f}",
+                f"{stock.delta_percent*2:+.2f}%",
+            ]
+            rows.append(row)
+            colours.append(stock.colour)
+        return [style_format("POSITIONS", style="bold")] + format_table(
+            rows, colours
+        )
 
     @property
     def profit_and_loss(self) -> List[str]:
         lines = [style_format("PROFIT AND LOSS", style="bold")]
         for stock in self.stock_store.profit_and_loss:
-            lines.append(style_format(stock.profit_and_loss, stock.colour))
+            lines.append(
+                style_format(
+                    f"{stock.delta_percent*100:+.2f}% {stock.delta_amount:+,.2f} {stock.currency.value}",
+                    stock.colour,
+                )
+            )
         return lines
 
     @property
