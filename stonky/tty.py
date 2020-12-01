@@ -54,7 +54,7 @@ class Tty:
                 symbol = "▲"
             row.append(symbol)
             row.append(f"{stock.delta_amount:+,.2f}")
-            row.append(f"{stock.delta_percent*2:+.2f}%")
+            row.append(f"{stock.delta_percent*100:+.2f}%")
             rows.append(row)
             colours.append(stock.colour)
         return [style_format("WATCHLIST", style="bold")] + format_table(
@@ -69,7 +69,7 @@ class Tty:
             row = [
                 stock.ticket,
                 f"{stock.delta_amount:+,.2f}",
-                f"{stock.delta_percent*2:+.2f}%",
+                f"{stock.delta_percent*100:+.2f}%",
             ]
             rows.append(row)
             colours.append(stock.colour)
