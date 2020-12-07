@@ -39,6 +39,12 @@ class CurrencyType(Enum):
     ZAR = "ZAR"
 
     @classmethod
+    def _missing_(cls, name):
+        for member in cls:
+            if member.name == name.upper():
+                return member
+
+    @classmethod
     def arg_choices(cls) -> Tuple[str]:
         return *tuple(str(choice.value) for choice in cls), ""
 

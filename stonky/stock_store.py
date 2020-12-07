@@ -104,7 +104,7 @@ class StockStore:
 
     async def _convert_currencies(self):
         used_currencies = set(self._raw_cash) | {
-            stock.currency for stock in self.positions
+            stock.currency for stock in self.positions + self.watchlist
         }
         forex = await self._api.get_forex_rates(
             self._base_currency, used_currencies
