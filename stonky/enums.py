@@ -1,5 +1,4 @@
 from enum import Enum
-
 from typing import Optional, Tuple
 
 
@@ -70,5 +69,5 @@ class SortType(Enum):
         return cls.__members__.get(arg.upper(), None)
 
     @classmethod
-    def arg_choices(cls) -> Tuple[str]:
+    def arg_choices(cls) -> Tuple[str, ...]:
         return *tuple(member.lower() for member in cls.__members__), ""

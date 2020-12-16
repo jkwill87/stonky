@@ -18,11 +18,8 @@ class Stock:
     market_price: float = 0.0
     volume: float = 0.0
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.ticket = self.ticket.upper()
-
-    def __str__(self):
-        return self.ticker_tape
 
     @property
     def amount_current(self) -> float:

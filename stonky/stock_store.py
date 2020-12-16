@@ -86,7 +86,7 @@ class StockStore:
             stocks.sort(key=lambda _: getattr(_, sort), reverse=reverse)
         return stocks
 
-    def _reset_raw_values(self):
+    def _reset_raw_values(self) -> None:
         self._raw_cash = copy(self._settings.cash)
         self._raw_positions = copy(self._settings.positions)
         self._raw_watchlist = copy(self._settings.watchlist)

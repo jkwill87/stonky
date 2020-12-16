@@ -1,5 +1,5 @@
 import asyncio
-from typing import Dict, Optional, Set
+from typing import Any, Dict, Optional, Set
 from urllib.parse import urlencode
 
 from aiohttp import ClientSession
@@ -10,14 +10,19 @@ from stonky.stock import Stock
 
 
 class Api:
-    def __init__(self):
+    def __init__(self) -> None:
         self._session: Optional[ClientSession] = None
 
-    async def __aenter__(self):
+    async def __aenter__(self) -> "Api":
         self._session = ClientSession()
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(
+        self,
+        exc_type: Any,
+        exc_val: Any,
+        exc_tb: Any,
+    ) -> None:
         if self._session:
             await self._session.close()
             self._session = None

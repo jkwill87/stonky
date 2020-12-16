@@ -1,6 +1,6 @@
 import asyncio
 from traceback import format_exc
-from typing import Any, List
+from typing import List
 
 from teletype.io import erase_lines, style_format, style_print
 
