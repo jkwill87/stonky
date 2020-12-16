@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional, Tuple
+from typing import Generator, Optional, Tuple
 
 
 class CurrencyType(Enum):
@@ -44,8 +44,9 @@ class CurrencyType(Enum):
                 return member
 
     @classmethod
-    def arg_choices(cls) -> Tuple[str]:
-        return *tuple(str(choice.value) for choice in cls), ""
+    def arg_choices(cls) -> Generator[str, None, None]:
+        yield from (str(choice.value) for choice in cls)
+        yield ""
 
 
 class SortType(Enum):
@@ -69,5 +70,6 @@ class SortType(Enum):
         return cls.__members__.get(arg.upper(), None)
 
     @classmethod
-    def arg_choices(cls) -> Tuple[str, ...]:
-        return *tuple(member.lower() for member in cls.__members__), ""
+    def arg_choices(cls) -> Generator[str, None, None]:
+        yield from (member.lower() for member in cls.__members__)
+        yield ""
