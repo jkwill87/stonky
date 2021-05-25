@@ -110,10 +110,8 @@ class StockStore:
             self._base_currency, used_currencies
         )
         # convert balances
-        base_amount = self._raw_cash.get(self._base_currency, 0.0)
         self._raw_cash = {
-            self._base_currency: base_amount
-            + sum(
+            self._base_currency: sum(
                 self._raw_cash[conversion_currency] / forex[conversion_currency]
                 for conversion_currency in self._raw_cash
             )
