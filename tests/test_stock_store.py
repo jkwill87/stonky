@@ -138,11 +138,11 @@ class TestPositions(TestStockStore):
 
     def test_sort__amount(self):
         self.settings.sort = SortType.AMOUNT
-        assert self.position_tickets == ['AAPL', 'AMD', 'VGRO.TO', 'SHOP.TO']
+        assert self.position_tickets == ["AAPL", "AMD", "VGRO.TO", "SHOP.TO"]
 
     def test_sort__amount_desc(self):
         self.settings.sort = SortType.AMOUNT_DESC
-        assert self.position_tickets == ['SHOP.TO', 'VGRO.TO', 'AMD', 'AAPL']
+        assert self.position_tickets == ["SHOP.TO", "VGRO.TO", "AMD", "AAPL"]
 
     def test_sort__ticket(self):
         self.settings.sort = SortType.TICKET
