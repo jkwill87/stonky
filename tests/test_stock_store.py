@@ -85,60 +85,6 @@ class TestWatchlist(TestStockStore):
             "AAPL",
         ]
 
-    def test_sort__low(self):
-        self.settings.sort = SortType.LOW
-        assert self.watch_tickets == [
-            "VGRO.TO",
-            "AAPL",
-            "AMD",
-            "SHOP.TO",
-        ]
-
-    def test_sort__low_desc(self):
-        self.settings.sort = SortType.LOW_DESC
-        assert self.watch_tickets == [
-            "SHOP.TO",
-            "AMD",
-            "AAPL",
-            "VGRO.TO",
-        ]
-
-    def test_sort__high(self):
-        self.settings.sort = SortType.HIGH
-        assert self.watch_tickets == [
-            "VGRO.TO",
-            "AAPL",
-            "AMD",
-            "SHOP.TO",
-        ]
-
-    def test_sort__high_desc(self):
-        self.settings.sort = SortType.HIGH_DESC
-        assert self.watch_tickets == [
-            "SHOP.TO",
-            "AMD",
-            "AAPL",
-            "VGRO.TO",
-        ]
-
-    def test_sort__close(self):
-        self.settings.sort = SortType.CLOSE
-        assert self.watch_tickets == [
-            "VGRO.TO",
-            "AAPL",
-            "AMD",
-            "SHOP.TO",
-        ]
-
-    def test_sort__close_desc(self):
-        self.settings.sort = SortType.CLOSE_DESC
-        assert self.watch_tickets == [
-            "SHOP.TO",
-            "AMD",
-            "AAPL",
-            "VGRO.TO",
-        ]
-
     def test_sort__change(self):
         self.settings.sort = SortType.CHANGE
         assert self.watch_tickets == [
@@ -192,11 +138,11 @@ class TestPositions(TestStockStore):
 
     def test_sort__amount(self):
         self.settings.sort = SortType.AMOUNT
-        assert self.position_tickets == ["VGRO.TO", "AAPL", "AMD", "SHOP.TO"]
+        assert self.position_tickets == ['AAPL', 'AMD', 'VGRO.TO', 'SHOP.TO']
 
     def test_sort__amount_desc(self):
         self.settings.sort = SortType.AMOUNT_DESC
-        assert self.position_tickets == ["SHOP.TO", "AMD", "AAPL", "VGRO.TO"]
+        assert self.position_tickets == ['SHOP.TO', 'VGRO.TO', 'AMD', 'AAPL']
 
     def test_sort__ticket(self):
         self.settings.sort = SortType.TICKET
@@ -205,30 +151,6 @@ class TestPositions(TestStockStore):
     def test_sort__ticket_desc(self):
         self.settings.sort = SortType.TICKET_DESC
         assert self.position_tickets == ["VGRO.TO", "SHOP.TO", "AMD", "AAPL"]
-
-    def test_sort__low(self):
-        self.settings.sort = SortType.LOW
-        assert self.position_tickets == ["VGRO.TO", "AAPL", "AMD", "SHOP.TO"]
-
-    def test_sort__low_desc(self):
-        self.settings.sort = SortType.LOW_DESC
-        assert self.position_tickets == ["SHOP.TO", "AMD", "AAPL", "VGRO.TO"]
-
-    def test_sort__high(self):
-        self.settings.sort = SortType.HIGH
-        assert self.position_tickets == ["VGRO.TO", "AAPL", "AMD", "SHOP.TO"]
-
-    def test_sort__high_desc(self):
-        self.settings.sort = SortType.HIGH_DESC
-        assert self.position_tickets == ["SHOP.TO", "AMD", "AAPL", "VGRO.TO"]
-
-    def test_sort__close(self):
-        self.settings.sort = SortType.CLOSE
-        assert self.position_tickets == ["AAPL", "AMD", "VGRO.TO", "SHOP.TO"]
-
-    def test_sort__close_desc(self):
-        self.settings.sort = SortType.CLOSE_DESC
-        assert self.position_tickets == ["SHOP.TO", "VGRO.TO", "AMD", "AAPL"]
 
     def test_sort__change(self):
         self.settings.sort = SortType.CHANGE

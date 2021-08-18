@@ -25,11 +25,6 @@ class TestGetQuote(TestApi):
         stock = await self.api.get_quote("AAPL")
         assert stock.ticket == "AAPL"
         assert stock.currency == CurrencyType.USD
-        assert stock.amount_bid == 452.49
-        assert stock.amount_ask == 452.67
-        assert stock.amount_low == 441.19
-        assert stock.amount_high == 453.1
-        assert stock.amount_prev_close == 437.5
         assert stock.delta_amount == 14.540009
         assert stock.delta_percent == 0.033234306
         assert stock.market_price == 452.04
@@ -40,11 +35,6 @@ class TestGetQuote(TestApi):
         stock = await self.api.get_quote("BTC-USD")
         assert stock.ticket == "BTC-USD"
         assert stock.currency == CurrencyType.USD
-        assert stock.amount_bid == 0.0
-        assert stock.amount_ask == 0.0
-        assert stock.amount_low == 11568.912
-        assert stock.amount_high == 11649.112
-        assert stock.amount_prev_close == 11583.987
         assert stock.delta_amount == 0.69628906
         assert stock.delta_percent == 6.0107894e-05
         assert stock.market_price == 11584.684
@@ -55,11 +45,6 @@ class TestGetQuote(TestApi):
         stock = await self.api.get_quote("HBLFX")
         assert stock.ticket == "HBLFX"
         assert stock.currency == CurrencyType.USD
-        assert stock.amount_bid == 0.0
-        assert stock.amount_ask == 0.0
-        assert stock.amount_low == 0.0
-        assert stock.amount_high == 0.0
-        assert stock.amount_prev_close == 15.04
         assert stock.delta_amount == 0.04
         assert stock.delta_percent == 0.0026595744
         assert stock.market_price == 15.08

@@ -83,8 +83,8 @@ class StockStore:
     def _try_sort(self, stocks: List[Stock]):
         if self._sort:
             reverse = self._sort.value.endswith("_desc")
-            sort, *_ = self._sort.value.rsplit("_desc")
-            stocks.sort(key=lambda _: getattr(_, sort), reverse=reverse)
+            sort_field, *_ = self._sort.value.rsplit("_desc")
+            stocks.sort(key=lambda stock: getattr(stock, sort_field), reverse=reverse)
         return stocks
 
     def _reset_raw_values(self) -> None:
