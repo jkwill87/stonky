@@ -45,7 +45,7 @@ class Tty:
                 row.append(stock.volume_str)
             else:
                 row.append("")
-            row.append(f"@ {stock.amount_current:.2f}")
+            row.append(f"@ {stock.current_amount:.2f}")
             if stock.delta_amount < 0:
                 symbol = "▼"
             elif stock.delta_amount == 0:

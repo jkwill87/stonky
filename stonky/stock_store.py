@@ -1,6 +1,7 @@
 import asyncio
 from copy import copy
-from typing import List
+from stonky.enums import CurrencyType
+from typing import Dict, List
 
 from stonky.api import Api
 from stonky.settings import Settings
@@ -53,12 +54,12 @@ class StockStore:
             if stock.currency not in pnl:
                 pnl[stock.currency] = stock
             else:
-                pnl[stock.currency].amount_prev_close += stock.amount_prev_close
+                pnl[stock.currency].current_amount += stock.current_amount
                 pnl[stock.currency].delta_amount += stock.delta_amount
         results = []
         for pnl_line in pnl.values():
             pnl_line.delta_percent = (
-                pnl_line.delta_amount / pnl_line.amount_prev_close
+                pnl_line.delta_amount / pnl_line.current_amount
             )
             results.append(pnl_line)
         return results
@@ -69,9 +70,9 @@ class StockStore:
         for ticket, count in self._raw_positions.items():
             stock = self._stocks[ticket]
             if stock.currency not in balances:
-                balances[stock.currency] = stock.amount_current * count
+                balances[stock.currency] = stock.current_amount * count
             else:
-                balances[stock.currency] += stock.amount_current * count
+                balances[stock.currency] += stock.current_amount * count
         for currency, amount in self._raw_cash.items():
             if currency not in balances:
                 balances[currency] = amount

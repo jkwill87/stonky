@@ -36,26 +36,19 @@ class Api:
                 f"Could not get stock information for {ticket}"
             )
         try:
-            summary_data = response["quoteSummary"]["result"][0][
-                "summaryDetail"
-            ]
             price_data = response["quoteSummary"]["result"][0]["price"]
             stock = Stock(
                 ticket=ticket,
                 currency=CurrencyType(price_data["currency"]),
-                amount_bid=summary_data["bid"].get("raw", 0.0),
-                amount_ask=summary_data["ask"].get("raw", 0.0),
-                amount_low=summary_data["dayLow"].get("raw", 0.0),
-                amount_high=summary_data["dayHigh"].get("raw", 0.0),
-                amount_prev_close=summary_data["previousClose"].get("raw", 0.0),
+                current_amount=price_data["regularMarketPrice"].get("raw", 0.0),
                 delta_amount=price_data["regularMarketChange"].get("raw", 0.0),
                 delta_percent=price_data["regularMarketChangePercent"].get(
                     "raw", 0.0
                 ),
                 market_price=price_data["regularMarketPrice"].get("raw", 0.0),
-                volume=summary_data["volume"].get("raw", 0.0),
+                volume=price_data["regularMarketVolume"].get("raw", 0.0),
             )
-        except TypeError:
+        except (TypeError, KeyError):
             raise StonkyException(
                 f"Could not get stock information for '{ticket}'"
             )

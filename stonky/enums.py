@@ -1,7 +1,8 @@
 from enum import Enum
-from typing import Generator, Optional, Tuple
+from typing import Generator, Optional
 
-
+# TODO: Create a currency dataclass which holds name, symbol, format fn, arithmetics
+# TODO: Add a lookup method to find by string; incorporate _missing_ logic
 class CurrencyType(Enum):
     AUD = "AUD"
     BGN = "BGN"
@@ -50,8 +51,8 @@ class CurrencyType(Enum):
 
 
 class SortType(Enum):
-    AMOUNT = "amount_current"
-    AMOUNT_DESC = "amount_current_desc"
+    AMOUNT = "current_amount"
+    AMOUNT_DESC = "current_amount_desc"
     TICKET = "ticket"
     TICKET_DESC = "ticket_desc"
     LOW = "amount_low"

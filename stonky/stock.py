@@ -8,11 +8,7 @@ from stonky.enums import CurrencyType
 class Stock:
     ticket: str = ""
     currency: CurrencyType = CurrencyType.USD
-    amount_bid: float = 0.0
-    amount_ask: float = 0.0
-    amount_low: float = 0.0
-    amount_high: float = 0.0
-    amount_prev_close: float = 0.0
+    current_amount: float = 0.0
     delta_amount: float = 0.0
     delta_percent: float = 0.0
     market_price: float = 0.0
@@ -20,15 +16,6 @@ class Stock:
 
     def __post_init__(self) -> None:
         self.ticket = self.ticket.upper()
-
-    @property
-    def amount_current(self) -> float:
-        if self.amount_bid:
-            return self.amount_bid
-        elif self.market_price:
-            return self.market_price
-        else:
-            return 0.0
 
     @property
     def volume_str(self) -> str:
@@ -64,13 +51,8 @@ class Stock:
 
     def increase_count(self, count: float):
         self.delta_amount *= count
-        self.amount_prev_close *= count
+        self.current_amount *= count
 
     def convert_currency(self, conversion_rate: float):
-        self.amount_bid *= conversion_rate
-        self.amount_ask *= conversion_rate
-        self.amount_low *= conversion_rate
-        self.amount_high *= conversion_rate
-        self.amount_prev_close *= conversion_rate
+        self.current_amount *= conversion_rate
         self.delta_amount *= conversion_rate
-        self.market_price *= conversion_rate

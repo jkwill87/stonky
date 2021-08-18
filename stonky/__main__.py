@@ -8,9 +8,8 @@ from stonky.tty import Tty, crash_report
 
 
 def entrypoint():
-    loop = asyncio.get_event_loop()
     try:
-        loop.run_until_complete(main())
+        asyncio.run(main())
     except SystemExit:
         raise
     except KeyboardInterrupt:
