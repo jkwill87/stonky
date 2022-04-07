@@ -5,7 +5,7 @@
 
 # 📈 stonky
 
-stonky is a simple command line dashboard for monitoring stocks. It pulls live data from [Yahoo! Finance](https://finance.yahoo.com) so anything it can support, e.g. international exchanges, cryptocurrencies, etc., stonky can too.
+stonky is a simple command line dashboard for monitoring stocks. It pulls live data from [Yahoo! Finance](https://finance.yahoo.com) so anything it can support, e.g. international exchanges, cryptocurrencies, etc., stonky can too. Support Python 3.7+.
 
 ![screenshot](https://github.com/jkwill87/stonky/raw/master/assets/screenshot.png)
 

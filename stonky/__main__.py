@@ -1,10 +1,12 @@
 import asyncio
+from sys import gettrace
 
 from stonky.api import Api
-from stonky.const import IS_DEBUG
 from stonky.settings import Settings
 from stonky.stock_store import StockStore
 from stonky.tty import Tty, crash_report
+
+IS_DEBUG = gettrace() is not None
 
 
 def entrypoint():

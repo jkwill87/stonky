@@ -2,7 +2,6 @@ from unittest import TestCase
 from unittest.mock import Mock
 
 from stonky.api import Api
-from stonky.enums import SortType
 from stonky.settings import Settings
 from stonky.stock_store import StockStore
 from tests import AAPL_STOCK, AMD_STOCK, SHOP_TO_STOCK, VGRO_TO_STOCK
@@ -50,7 +49,7 @@ class TestWatchlist(TestStockStore):
         ]
 
     def test_sort__amount(self):
-        self.settings.sort = SortType.AMOUNT
+        self.settings.sort = "amount"
         assert self.watch_tickets == [
             "VGRO.TO",
             "AAPL",
@@ -59,7 +58,7 @@ class TestWatchlist(TestStockStore):
         ]
 
     def test_sort__amount_desc(self):
-        self.settings.sort = SortType.AMOUNT_DESC
+        self.settings.sort = "amount_desc"
         assert self.watch_tickets == [
             "SHOP.TO",
             "AMD",
@@ -68,7 +67,7 @@ class TestWatchlist(TestStockStore):
         ]
 
     def test_sort__ticket(self):
-        self.settings.sort = SortType.TICKET
+        self.settings.sort = "ticket"
         assert self.watch_tickets == [
             "AAPL",
             "AMD",
@@ -77,7 +76,7 @@ class TestWatchlist(TestStockStore):
         ]
 
     def test_sort__ticket_desc(self):
-        self.settings.sort = SortType.TICKET_DESC
+        self.settings.sort = "ticket_desc"
         assert self.watch_tickets == [
             "VGRO.TO",
             "SHOP.TO",
@@ -86,7 +85,7 @@ class TestWatchlist(TestStockStore):
         ]
 
     def test_sort__change(self):
-        self.settings.sort = SortType.CHANGE
+        self.settings.sort = "change"
         assert self.watch_tickets == [
             "AAPL",
             "VGRO.TO",
@@ -95,7 +94,7 @@ class TestWatchlist(TestStockStore):
         ]
 
     def test_sort__change_desc(self):
-        self.settings.sort = SortType.CHANGE_DESC
+        self.settings.sort = "change_desc"
         assert self.watch_tickets == [
             "AMD",
             "SHOP.TO",
@@ -104,7 +103,7 @@ class TestWatchlist(TestStockStore):
         ]
 
     def test_sort__volume(self):
-        self.settings.sort = SortType.VOLUME
+        self.settings.sort = "volume"
         assert self.watch_tickets == [
             "VGRO.TO",
             "SHOP.TO",
@@ -113,7 +112,7 @@ class TestWatchlist(TestStockStore):
         ]
 
     def test_sort__volume_desc(self):
-        self.settings.sort = SortType.VOLUME_DESC
+        self.settings.sort = "volume_desc"
         assert self.watch_tickets == [
             "AAPL",
             "AMD",
@@ -137,33 +136,33 @@ class TestPositions(TestStockStore):
         ]
 
     def test_sort__amount(self):
-        self.settings.sort = SortType.AMOUNT
+        self.settings.sort = "amount"
         assert self.position_tickets == ["AAPL", "AMD", "VGRO.TO", "SHOP.TO"]
 
     def test_sort__amount_desc(self):
-        self.settings.sort = SortType.AMOUNT_DESC
+        self.settings.sort = "amount_desc"
         assert self.position_tickets == ["SHOP.TO", "VGRO.TO", "AMD", "AAPL"]
 
     def test_sort__ticket(self):
-        self.settings.sort = SortType.TICKET
+        self.settings.sort = "ticket"
         assert self.position_tickets == ["AAPL", "AMD", "SHOP.TO", "VGRO.TO"]
 
     def test_sort__ticket_desc(self):
-        self.settings.sort = SortType.TICKET_DESC
+        self.settings.sort = "ticket_desc"
         assert self.position_tickets == ["VGRO.TO", "SHOP.TO", "AMD", "AAPL"]
 
     def test_sort__change(self):
-        self.settings.sort = SortType.CHANGE
+        self.settings.sort = "change"
         assert self.position_tickets == ["AAPL", "VGRO.TO", "SHOP.TO", "AMD"]
 
     def test_sort__change_desc(self):
-        self.settings.sort = SortType.CHANGE_DESC
+        self.settings.sort = "change_desc"
         assert self.position_tickets == ["AMD", "SHOP.TO", "VGRO.TO", "AAPL"]
 
     def test_sort__volume(self):
-        self.settings.sort = SortType.VOLUME
+        self.settings.sort = "volume"
         assert self.position_tickets == ["VGRO.TO", "SHOP.TO", "AMD", "AAPL"]
 
     def test_sort__volume_desc(self):
-        self.settings.sort = SortType.VOLUME_DESC
+        self.settings.sort = "volume_desc"
         assert self.position_tickets == ["AAPL", "AMD", "SHOP.TO", "VGRO.TO"]

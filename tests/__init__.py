@@ -1,9 +1,8 @@
-from stonky.enums import CurrencyType
 from stonky.stock import Stock
 
 AMD_STOCK = Stock(
     ticket="AMD",
-    currency=CurrencyType.USD,
+    currency="USD",
     current_amount=452.49,
     delta_amount=14.540009,
     delta_percent=0.033234306,
@@ -13,7 +12,7 @@ AMD_STOCK = Stock(
 
 AAPL_STOCK = Stock(
     ticket="AAPL",
-    currency=CurrencyType.USD,
+    currency="USD",
     current_amount=81.83,
     delta_amount=-0.7700043,
     delta_percent=-0.009320957,
@@ -23,7 +22,7 @@ AAPL_STOCK = Stock(
 
 VGRO_TO_STOCK = Stock(
     ticket="VGRO.TO",
-    currency=CurrencyType.USD,
+    currency="USD",
     current_amount=27.12,
     delta_amount=-0.12000084,
     delta_percent=-0.004402085,
@@ -33,7 +32,7 @@ VGRO_TO_STOCK = Stock(
 
 SHOP_TO_STOCK = Stock(
     ticket="SHOP.TO",
-    currency=CurrencyType.CAD,
+    currency="CAD",
     current_amount=1318.02,
     delta_amount=10.869995,
     delta_percent=0.008287331,

@@ -1,12 +1,25 @@
 import asyncio
+from datetime import date
+from platform import platform, python_version
+from sys import argv
 from traceback import format_exc
 from typing import List
 
+from teletype import VERSION as teletype_version
 from teletype.io import erase_lines, style_format, style_print
 
-from stonky.const import SYSTEM
+from stonky.__version__ import VERSION
 from stonky.settings import Settings
 from stonky.stock_store import StockStore
+
+SYSTEM = {
+    "date": date.today(),
+    "platform": platform(),
+    "arguments": argv[1:],
+    "python version": python_version(),
+    "stonky version": VERSION,
+    "teletype version": teletype_version,
+}
 
 
 def format_table(rows: List[List[str]], colours: List[str]):
@@ -57,9 +70,7 @@ class Tty:
             row.append(f"{stock.delta_percent*100:+.2f}%")
             rows.append(row)
             colours.append(stock.colour)
-        return [style_format("WATCHLIST", style="bold")] + format_table(
-            rows, colours
-        )
+        return [style_format("WATCHLIST", style="bold")] + format_table(rows, colours)
 
     @property
     def positions(self) -> List[str]:
@@ -73,9 +84,7 @@ class Tty:
             ]
             rows.append(row)
             colours.append(stock.colour)
-        return [style_format("POSITIONS", style="bold")] + format_table(
-            rows, colours
-        )
+        return [style_format("POSITIONS", style="bold")] + format_table(rows, colours)
 
     @property
     def profit_and_loss(self) -> List[str]:
@@ -83,7 +92,7 @@ class Tty:
         for stock in self.stock_store.profit_and_loss:
             lines.append(
                 style_format(
-                    f"{stock.delta_percent*100:+.2f}% {stock.delta_amount:+,.2f} {stock.currency.value}",
+                    f"{stock.delta_percent*100:+.2f}% {stock.delta_amount:+,.2f} {stock.currency}",
                     stock.colour,
                 )
             )
@@ -93,7 +102,7 @@ class Tty:
     def balances_str(self) -> List[str]:
         lines = [style_format("BALANCES", style="bold")]
         for currency, balance in self.stock_store.balances.items():
-            lines.append(f"{balance:,.2f} {currency.value}")
+            lines.append(f"{balance:,.2f} {currency}")
         return lines
 
     async def draw(self):
@@ -115,6 +124,7 @@ class Tty:
         print("\n".join(lines))
 
     async def draw_live(self):
+        assert self.settings.refresh is not None
         remaining = 0
         while True:
             if remaining == 0:

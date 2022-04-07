@@ -1,24 +1,24 @@
 import asyncio
 from copy import copy
-from stonky.enums import CurrencyType
-from typing import Dict, List
+from typing import Dict, List, Optional, Set
 
 from stonky.api import Api
 from stonky.settings import Settings
 from stonky.stock import Stock
+from stonky.typedef import CurrencyStr, SortStr, is_sort_str
 
 
 class StockStore:
     def __init__(self, api: Api, settings: Settings):
-        self._stocks = {}
-        self._api = api
-        self._sort = settings.sort
-        self._base_currency = settings.currency
-        self._settings = settings
-        self._raw_cash = None
-        self._raw_positions = None
-        self._raw_watchlist = None
-        self._raw_tickets = None
+        self._stocks: Dict[str, Stock] = {}
+        self._api: Api = api
+        self._sort: Optional[SortStr] = settings.sort
+        self._base_currency: Optional[CurrencyStr] = settings.currency
+        self._settings: Settings = settings
+        self._raw_cash: Dict[CurrencyStr, float] = {}
+        self._raw_positions: Dict[str, float] = {}
+        self._raw_watchlist: List[str] = []
+        self._raw_tickets: Set[str] = set()
 
     async def update(self):
         self._reset_raw_values()
@@ -46,7 +46,7 @@ class StockStore:
         return self._try_sort(results)
 
     @property
-    def profit_and_loss(self):
+    def profit_and_loss(self) -> List[Stock]:
         pnl = {}
         for ticket, count in self._raw_positions.items():
             stock = copy(self._stocks[ticket])
@@ -58,14 +58,12 @@ class StockStore:
                 pnl[stock.currency].delta_amount += stock.delta_amount
         results = []
         for pnl_line in pnl.values():
-            pnl_line.delta_percent = (
-                pnl_line.delta_amount / pnl_line.current_amount
-            )
+            pnl_line.delta_percent = pnl_line.delta_amount / pnl_line.current_amount
             results.append(pnl_line)
         return results
 
     @property
-    def balances(self):
+    def balances(self) -> Dict[CurrencyStr, float]:
         balances = {}
         for ticket, count in self._raw_positions.items():
             stock = self._stocks[ticket]
@@ -81,12 +79,10 @@ class StockStore:
         return balances
 
     def _try_sort(self, stocks: List[Stock]):
-        if self._sort:
-            reverse = self._sort.value.endswith("_desc")
-            sort_field, *_ = self._sort.value.rsplit("_desc")
-            stocks.sort(
-                key=lambda stock: getattr(stock, sort_field), reverse=reverse
-            )
+        if is_sort_str(self._sort):
+            sort_by = self._sort
+            reverse = sort_by.endswith("_desc")
+            stocks.sort(key=lambda stock: stock.sort_value(sort_by), reverse=reverse)
         return stocks
 
     def _reset_raw_values(self) -> None:
@@ -98,20 +94,17 @@ class StockStore:
         )
 
     async def _update_quotes(self):
-        futures = tuple(
-            self._api.get_quote(ticket) for ticket in self._raw_tickets
-        )
-        self._stocks = {
-            stock.ticket: stock for stock in await asyncio.gather(*futures)
-        }
+        if not self._raw_tickets:
+            return
+        futures = tuple(self._api.get_quote(ticket) for ticket in self._raw_tickets)
+        self._stocks = {stock.ticket: stock for stock in await asyncio.gather(*futures)}
 
     async def _convert_currencies(self):
+        assert self._base_currency is not None
         used_currencies = set(self._raw_cash) | {
             stock.currency for stock in self.positions + self.watchlist
         }
-        forex = await self._api.get_forex_rates(
-            self._base_currency, used_currencies
-        )
+        forex = await self._api.get_forex_rates(self._base_currency, used_currencies)
         # convert balances
         self._raw_cash = {
             self._base_currency: sum(

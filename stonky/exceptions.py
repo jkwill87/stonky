@@ -1,2 +1,0 @@
-class StonkyException(Exception):
-    pass
