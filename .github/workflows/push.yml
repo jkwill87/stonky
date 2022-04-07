@@ -67,21 +67,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
 
-    strategy:
-      matrix:
-        python-version: ["3.7", "3.x"]
-    name: test-v${{matrix.python-version}}
-
     steps:
       - name: Checking out Git Commit
         uses: actions/checkout@v2
 
-      - name: Installing Python
+      - name: Installing Python 3
         uses: actions/setup-python@v2
         with:
-          python-version: ${{matrix.python-version}}
-          cache: pip
-          cache-dependency-path: setup.cfg
+          python-version: 3.x
 
       - uses: actions/cache@v2
         with:
